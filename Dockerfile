@@ -1,7 +1,7 @@
 # Multi-stage Dockerfile for NestJS application
 
 # Stage 1: Build stage
-FROM node:22.19.0 AS builder
+FROM node:24.13.0 AS builder
 
 # Set the working directory inside the container
 WORKDIR /usr/src/app
@@ -19,7 +19,7 @@ COPY . .
 RUN npm run build
 
 # Stage 2: Production stage
-FROM node:22.19.0-alpine AS production
+FROM node:24.13.0-alpine AS production
 
 # Set the working directory inside the container
 WORKDIR /usr/src/app
