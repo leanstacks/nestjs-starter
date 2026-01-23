@@ -1,0 +1,52 @@
+{
+	"id": "53f1be85-a1d6-4416-b088-a84623fc6f38",
+	"name": "LOCAL",
+	"values": [
+		{
+			"key": "baseUrl",
+			"value": "",
+			"type": "default",
+			"description": "The API base URL, e.g. https://api.dev.example.com or http://localhost:3001",
+			"enabled": true
+		},
+		{
+			"key": "username",
+			"value": "",
+			"type": "default",
+			"description": "An authentication username, e.g. SmilingBob123",
+			"enabled": true
+		},
+		{
+			"key": "password",
+			"value": "",
+			"type": "secret",
+			"description": "An authentication password",
+			"enabled": true
+		},
+		{
+			"key": "bearerToken",
+			"value": "",
+			"type": "any",
+			"description": "A authentication bearer token (set by API call)",
+			"enabled": true
+		},
+		{
+			"key": "taskId",
+			"value": "",
+			"type": "any",
+			"description": "A Task identifier (set by create API call)",
+			"enabled": true
+		},
+		{
+			"key": "randomTaskPriority",
+			"value": "",
+			"type": "any",
+			"description": "A random Task Priority value (set by create API call)",
+			"enabled": true
+		}
+	],
+	"color": null,
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2026-01-23T13:08:41.323Z",
+	"_postman_exported_using": "Postman/11.81.3"
+}
