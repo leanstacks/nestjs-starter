@@ -5,9 +5,6 @@ cdk.out
 *.js
 *.js.map
 
-# CDK Context
-cdk.context.json
-
 # Dependency directories
 node_modules/
 
