@@ -7,18 +7,18 @@ This directory contains the AWS CDK infrastructure code for the NestJS Playgroun
 ```
 infrastructure/
 ├── app.ts                      # CDK app entry point
-├── cdk.json                   # CDK configuration
-├── package.json               # NPM dependencies and scripts
-├── tsconfig.json              # TypeScript configuration
-├── .env.example               # Example environment variables
-├── .env                       # Environment variables (create from .env.example)
-├── README.md                  # This file
-└── stacks/                    # CDK stack definitions
-   ├── network.stack.ts       # Network infrastructure (VPC, Route 53, SSL)
-   ├── database.stack.ts      # Database infrastructure (Aurora Serverless v2)
-   ├── compute.stack.ts       # Compute infrastructure (ECS, ALB)
-   ├── ecr.stack.ts           # ECR repository stack (container registry)
-   └── scheduled-task.stack.ts # Scheduled task infrastructure (optional)
+├── cdk.json                    # CDK configuration
+├── package.json                # NPM dependencies and scripts
+├── tsconfig.json               # TypeScript configuration
+├── .env.example                # Example environment variables
+├── .env                        # Environment variables (create from .env.example)
+├── README.md                   # This file
+└── stacks/                     # CDK stack definitions
+   ├── network.stack.ts         # Network infrastructure (VPC, Route 53, SSL)
+   ├── database.stack.ts        # Database infrastructure (Aurora Serverless v2)
+   ├── compute.stack.ts         # Compute infrastructure (ECS, ALB)
+   ├── ecr.stack.ts             # ECR repository stack (container registry)
+   └── scheduled-task.stack.ts  # Scheduled task infrastructure (optional)
 ```
 
 ## Architecture Overview
