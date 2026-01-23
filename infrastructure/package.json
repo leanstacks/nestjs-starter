@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "build": "tsc",
+    "clean": "rimraf cdk.out coverage",
     "watch": "tsc -w",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -19,17 +20,18 @@
     "bootstrap": "cdk bootstrap"
   },
   "dependencies": {
-    "aws-cdk-lib": "2.227.0",
-    "constructs": "10.4.3",
+    "aws-cdk-lib": "2.235.1",
+    "constructs": "10.4.5",
     "dotenv": "17.2.3",
-    "zod": "4.1.12"
+    "zod": "4.3.6"
   },
   "devDependencies": {
     "@types/jest": "30.0.0",
-    "@types/node": "24.10.1",
-    "aws-cdk": "2.1033.0",
+    "@types/node": "25.0.10",
+    "aws-cdk": "2.1102.0",
     "jest": "30.2.0",
-    "ts-jest": "29.4.5",
+    "rimraf": "6.1.2",
+    "ts-jest": "29.4.6",
     "typescript": "5.9.3"
   }
 }
