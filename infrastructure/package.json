@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "build": "tsc",
-    "clean": "rimraf cdk.out coverage",
+    "clean": "rimraf cdk.out coverage dist",
     "watch": "tsc -w",
     "test": "jest",
     "test:watch": "jest --watch",
