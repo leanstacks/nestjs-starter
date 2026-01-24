@@ -1,6 +1,6 @@
-# NestJS Playground Infrastructure
+# NestJS Starter Infrastructure
 
-This directory contains the AWS CDK infrastructure code for the NestJS Playground application. The infrastructure is defined using TypeScript and AWS CDK v2, providing Infrastructure as Code (IaC) for deploying the application to AWS.
+This directory contains the AWS CDK infrastructure code for the NestJS Starter application. The infrastructure is defined using TypeScript and AWS CDK v2, providing Infrastructure as Code (IaC) for deploying the application to AWS.
 
 ## Directory Structure
 
@@ -91,7 +91,7 @@ Before deploying the infrastructure, ensure you have:
    CDK_HOSTED_ZONE_ID=Z1234567890ABC # Existing Route 53 hosted zone ID
    CDK_HOSTED_ZONE_NAME=example.com  # Hosted zone domain name
    CDK_CERTIFICATE_ARN=arn:aws:acm:... # Existing SSL certificate ARN
-   CDK_DOMAIN_NAME=nestjs-playground-api # Subdomain for the application
+   CDK_DOMAIN_NAME=nestjs-starter-api # Subdomain for the application
 
    # Optional: Scheduled Task Configuration
    CDK_SCHEDULE_TASK_CLEANUP_CRON=*/10 * * * * * # Cron expression for task cleanup
@@ -158,16 +158,18 @@ Check the AWS Console for created resources and test the application URL.
 
 ## Available Scripts
 
-| Script              | Description                                        |
-| ------------------- | -------------------------------------------------- |
-| `npm run build`     | Compile TypeScript to JavaScript                   |
-| `npm run watch`     | Watch for changes and auto-compile                 |
-| `npm run test`      | Run Jest tests                                     |
-| `npm run bootstrap` | Bootstrap CDK in your AWS account/region           |
-| `npm run synth`     | Synthesize CloudFormation templates                |
-| `npm run deploy`    | Deploy all stacks                                  |
-| `npm run destroy`   | Destroy all stacks                                 |
-| `npm run diff`      | Show differences between deployed and local stacks |
+| Script                    | Description                                        |
+| ------------------------- | -------------------------------------------------- |
+| `npm run build`           | Compile TypeScript to JavaScript                   |
+| `npm run watch`           | Watch for changes and auto-compile                 |
+| `npm run test`            | Run Jest tests                                     |
+| `npm run bootstrap`       | Bootstrap CDK in your AWS account/region           |
+| `npm run synth`           | Synthesize CloudFormation templates                |
+| `npm run deploy <stack>`  | Deploy a stack                                     |
+| `npm run deploy:all`      | Deploy all stacks                                  |
+| `npm run destroy <stack>` | Destroy a stack                                    |
+| `npm run destroy:all`     | Destroy all stacks                                 |
+| `npm run diff`            | Show differences between deployed and local stacks |
 
 ## Stack Dependencies
 

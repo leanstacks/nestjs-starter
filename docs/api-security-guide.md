@@ -1,6 +1,6 @@
 # API Security Guide
 
-This guide provides an overview of the API security approach used in the NestJS Playground application. It is intended for new engineers to understand how authentication and authorization are implemented, focusing on JWT (JSON Web Token) usage, the registration and sign-in flows, and the global JWT Auth Guard with public endpoint decorators.
+This guide provides an overview of the API security approach used in the NestJS Starter application. It is intended for new engineers to understand how authentication and authorization are implemented, focusing on JWT (JSON Web Token) usage, the registration and sign-in flows, and the global JWT Auth Guard with public endpoint decorators.
 
 ---
 

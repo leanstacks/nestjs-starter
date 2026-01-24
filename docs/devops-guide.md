@@ -1,6 +1,6 @@
 # DevOps Guide
 
-Welcome to the DevOps guide for the `nestjs-playground` project! This document is designed to help engineers understand the DevOps practices, tools, and workflows used in this repository.
+Welcome to the DevOps guide for the `nestjs-starter` project! This document is designed to help engineers understand the DevOps practices, tools, and workflows used in this repository.
 
 ## Overview
 

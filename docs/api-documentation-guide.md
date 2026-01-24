@@ -29,7 +29,7 @@ NestJS integrates Swagger to automatically generate interactive API documentatio
      // ...existing code...
      const config = new DocumentBuilder()
        .setTitle('API Documentation')
-       .setDescription('NestJS Playground API')
+       .setDescription('NestJS Starter API')
        .setVersion('1.0')
        .build();
      const document = SwaggerModule.createDocument(app, config);

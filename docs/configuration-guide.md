@@ -107,7 +107,7 @@ Common examples:
 
 ```dotenv
 ############################################################
-# Example .env file for NestJS Playground
+# Example .env file for NestJS Starter
 #
 # Copy this file to `.env` and adjust values as needed.
 ############################################################
