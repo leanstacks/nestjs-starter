@@ -1,7 +1,7 @@
 {
-  "name": "nestjs-playground-infrastructure",
+  "name": "nestjs-starter-infrastructure",
   "version": "0.3.0",
-  "description": "AWS CDK infrastructure for NestJS Playground application",
+  "description": "AWS CDK infrastructure as code for the NestJS Starter application.",
   "private": true,
   "scripts": {
     "build": "tsc",
@@ -20,7 +20,7 @@
     "bootstrap": "cdk bootstrap"
   },
   "dependencies": {
-    "aws-cdk-lib": "2.235.1",
+    "aws-cdk-lib": "2.236.0",
     "constructs": "10.4.5",
     "dotenv": "17.2.3",
     "zod": "4.3.6"

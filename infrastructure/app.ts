@@ -22,7 +22,7 @@ const appVersion = app.node.tryGetContext('appVersion') as string | undefined;
 
 // Network Stack
 const networkStack = new NetworkStack(app, `${config.CDK_APP_NAME}-network-${config.CDK_ENVIRONMENT}`, {
-  description: 'Network stack for NestJS Playground',
+  description: 'Network stack for NestJS Starter',
   env,
   hostedZoneId: config.CDK_HOSTED_ZONE_ID,
   hostedZoneName: config.CDK_HOSTED_ZONE_NAME,
@@ -34,7 +34,7 @@ const networkStack = new NetworkStack(app, `${config.CDK_APP_NAME}-network-${con
 
 // ECR Stack
 const ecrStack = new EcrStack(app, `${config.CDK_APP_NAME}-ecr-${config.CDK_ENVIRONMENT}`, {
-  description: 'ECR stack for NestJS Playground',
+  description: 'ECR stack for NestJS Starter',
   env,
   appName: config.CDK_APP_NAME,
   environment: config.CDK_ENVIRONMENT,
@@ -42,7 +42,7 @@ const ecrStack = new EcrStack(app, `${config.CDK_APP_NAME}-ecr-${config.CDK_ENVI
 
 // Database Stack
 const databaseStack = new DatabaseStack(app, `${config.CDK_APP_NAME}-database-${config.CDK_ENVIRONMENT}`, {
-  description: 'Database stack for NestJS Playground',
+  description: 'Database stack for NestJS Starter',
   env,
   vpc: networkStack.vpc,
   databaseName: config.CDK_DATABASE_NAME,
@@ -56,7 +56,7 @@ const databaseStack = new DatabaseStack(app, `${config.CDK_APP_NAME}-database-${
 
 // Compute Stack
 const computeStack = new ComputeStack(app, `${config.CDK_APP_NAME}-compute-${config.CDK_ENVIRONMENT}`, {
-  description: 'Compute stack for NestJS Playground',
+  description: 'Compute stack for NestJS Starter',
   env,
   vpc: networkStack.vpc,
   repository: ecrStack.repository,
@@ -84,7 +84,7 @@ const scheduledTaskStack = new ScheduledTaskStack(
   app,
   `${config.CDK_APP_NAME}-scheduled-task-${config.CDK_ENVIRONMENT}`,
   {
-    description: 'Scheduled Task stack for NestJS Playground',
+    description: 'Scheduled Task stack for NestJS Starter',
     env,
     vpc: networkStack.vpc,
     cluster: computeStack.cluster,

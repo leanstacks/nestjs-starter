@@ -40,11 +40,11 @@ describe('Task Entity', () => {
     const dueDate = new Date('2025-09-15T10:00:00.000Z');
 
     // Act
-    task.description = 'Write comprehensive documentation for the NestJS playground project';
+    task.description = 'Write comprehensive documentation for the NestJS Starter project';
     task.dueAt = dueDate;
 
     // Assert
-    expect(task.description).toBe('Write comprehensive documentation for the NestJS playground project');
+    expect(task.description).toBe('Write comprehensive documentation for the NestJS Starter project');
     expect(task.dueAt).toBe(dueDate);
   });
 

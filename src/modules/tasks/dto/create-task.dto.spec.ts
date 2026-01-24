@@ -92,7 +92,7 @@ describe('CreateTaskDto', () => {
       // Arrange
       const dto = plainToInstance(CreateTaskDto, {
         summary: 'Complete project documentation',
-        description: 'Write comprehensive documentation for the NestJS playground project',
+        description: 'Write comprehensive documentation for the NestJS Starter project',
         taskPriorityCode: 'HIGH',
       });
 

@@ -51,7 +51,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ inputs.aws_role_arn }}
-          role-session-name: release-nestjs-playground-${{ inputs.environment }}
+          role-session-name: release-nestjs-starter-${{ inputs.environment }}
           aws-region: ${{ inputs.aws_region }}
 
       # Step 4: Install infrastructure dependencies
@@ -81,35 +81,35 @@ jobs:
         working-directory: ./infrastructure
         run: |
           echo "🚀 Deploying Network stack..."
-          npx cdk deploy nestjs-playground-network-${{ inputs.environment }} --require-approval never
+          npx cdk deploy nestjs-starter-network-${{ inputs.environment }} --require-approval never
           echo "✅ Network stack deployed successfully"
 
       - name: Deploy Database stack
         working-directory: ./infrastructure
         run: |
           echo "🚀 Deploying Database stack..."
-          npx cdk deploy nestjs-playground-database-${{ inputs.environment }} --require-approval never
+          npx cdk deploy nestjs-starter-database-${{ inputs.environment }} --require-approval never
           echo "✅ Database stack deployed successfully"
 
       - name: Deploy Compute stack
         working-directory: ./infrastructure
         run: |
           echo "🚀 Deploying Compute stack..."
-          npx cdk deploy nestjs-playground-compute-${{ inputs.environment }} --require-approval never --context appVersion=${{ inputs.image_tag }}
+          npx cdk deploy nestjs-starter-compute-${{ inputs.environment }} --require-approval never --context appVersion=${{ inputs.image_tag }}
           echo "✅ Compute stack deployed successfully"
 
       - name: Deploy Scheduled Task stack
         working-directory: ./infrastructure
         run: |
           echo "🚀 Deploying Scheduled Task stack..."
-          npx cdk deploy nestjs-playground-scheduled-task-${{ inputs.environment }} --require-approval never --context appVersion=${{ inputs.image_tag }}
+          npx cdk deploy nestjs-starter-scheduled-task-${{ inputs.environment }} --require-approval never --context appVersion=${{ inputs.image_tag }}
           echo "✅ Scheduled Task stack deployed successfully"
 
       # Step 9: Update ECS services with specified image tag
       - name: Update ECS API service
         run: |
-          CLUSTER_NAME="nestjs-playground-${{ inputs.environment }}"
-          SERVICE_NAME="nestjs-playground-${{ inputs.environment }}"
+          CLUSTER_NAME="nestjs-starter-${{ inputs.environment }}"
+          SERVICE_NAME="nestjs-starter-${{ inputs.environment }}"
 
           echo "🔄 Forcing ECS service update with image tag: ${{ inputs.image_tag }}"
           aws ecs update-service \
@@ -122,8 +122,8 @@ jobs:
 
       - name: Update ECS Scheduled Task service
         run: |
-          CLUSTER_NAME="nestjs-playground-${{ inputs.environment }}"
-          SERVICE_NAME="nestjs-playground-scheduler-${{ inputs.environment }}"
+          CLUSTER_NAME="nestjs-starter-${{ inputs.environment }}"
+          SERVICE_NAME="nestjs-starter-scheduler-${{ inputs.environment }}"
 
           echo "🔍 Checking if scheduled task service exists..."
           if aws ecs describe-services \

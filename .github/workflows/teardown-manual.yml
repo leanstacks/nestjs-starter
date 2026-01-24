@@ -43,7 +43,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ inputs.environment == 'dev' && vars.AWS_ROLE_ARN_DEV || inputs.environment == 'qa' && vars.AWS_ROLE_ARN_QA || vars.AWS_ROLE_ARN_PRD }}
-          role-session-name: teardown-nestjs-playground-${{ inputs.environment }}
+          role-session-name: teardown-nestjs-starter-${{ inputs.environment }}
           aws-region: ${{ vars.AWS_REGION }}
 
       # Step 4: Install infrastructure dependencies

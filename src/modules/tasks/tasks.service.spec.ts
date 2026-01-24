@@ -16,7 +16,7 @@ describe('TasksService', () => {
     {
       id: '550e8400-e29b-41d4-a716-446655440001',
       summary: 'Complete project documentation',
-      description: 'Write comprehensive documentation for the NestJS playground project',
+      description: 'Write comprehensive documentation for the NestJS Starter project',
       dueAt: new Date('2025-09-15T10:00:00.000Z'),
       isComplete: false,
       userId: 'user-123',

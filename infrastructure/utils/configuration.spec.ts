@@ -36,7 +36,7 @@ describe('Configuration Utility', () => {
         const config = loadConfiguration();
 
         // Assert
-        expect(config.CDK_APP_NAME).toBe('nestjs-playground');
+        expect(config.CDK_APP_NAME).toBe('nestjs-starter');
         expect(config.CDK_APP_PORT).toBe(3000);
         expect(config.CDK_APP_LOGGING_LEVEL).toBe('info');
         expect(config.CDK_APP_CORS_ALLOWED_ORIGIN).toBe('*');
@@ -47,7 +47,7 @@ describe('Configuration Utility', () => {
         expect(config.CDK_SERVICE_DESIRED_COUNT).toBe(0);
         expect(config.CDK_SERVICE_MIN_CAPACITY).toBe(0);
         expect(config.CDK_SERVICE_MAX_CAPACITY).toBe(4);
-        expect(config.CDK_DATABASE_NAME).toBe('nestjs_playground');
+        expect(config.CDK_DATABASE_NAME).toBe('nestjs_starter');
         expect(config.CDK_DATABASE_USERNAME).toBe('postgres');
         expect(config.CDK_DATABASE_MIN_CAPACITY).toBe(0.5);
         expect(config.CDK_DATABASE_MAX_CAPACITY).toBe(1);

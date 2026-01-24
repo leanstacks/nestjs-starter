@@ -1,7 +1,7 @@
 {
-  "name": "nestjs-playground",
+  "name": "nestjs-starter",
   "version": "0.3.0",
-  "description": "A playground for learning and experimentation with NestJS.",
+  "description": "A starter kit for NestJS application components.",
   "author": "Matthew Warman",
   "license": "MIT",
   "scripts": {
