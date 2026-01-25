@@ -222,59 +222,10 @@ describe('DatabaseStack', () => {
       });
     });
 
-    it.skip('should configure backup retention for production environment', () => {
-      // Arrange
-      const prodApp = new cdk.App();
-      const prodVpcStack = new cdk.Stack(prodApp, 'ProdVpcStack');
-      const prodVpc = new ec2.Vpc(prodVpcStack, 'ProdVpc', { maxAzs: 2 });
-
-      const prodProps = {
-        ...defaultProps,
-        vpc: prodVpc,
-        environment: 'prd',
-      };
-
-      // Act
-      const prodStack = new DatabaseStack(prodApp, 'ProdDatabaseStack', prodProps);
-      const prodTemplate = Template.fromStack(prodStack);
-
-      // Assert
-      prodTemplate.hasResourceProperties('AWS::RDS::DBCluster', {
-        BackupRetentionPeriod: 7, // 7 days for prod
-        DeletionProtection: true,
-      });
-    });
-
     it('should disable deletion protection for non-production environments', () => {
       // Act & Assert
       template.hasResourceProperties('AWS::RDS::DBCluster', {
         DeletionProtection: false,
-      });
-    });
-
-    it.skip('should handle different capacity configurations', () => {
-      // Arrange
-      const customApp = new cdk.App();
-      const customVpcStack = new cdk.Stack(customApp, 'CustomVpcStack');
-      const customVpc = new ec2.Vpc(customVpcStack, 'CustomVpc', { maxAzs: 2 });
-
-      const customProps = {
-        ...defaultProps,
-        vpc: customVpc,
-        databaseMinCapacity: 1,
-        databaseMaxCapacity: 8,
-      };
-
-      // Act
-      const customStack = new DatabaseStack(customApp, 'CustomDatabaseStack', customProps);
-      const customTemplate = Template.fromStack(customStack);
-
-      // Assert
-      customTemplate.hasResourceProperties('AWS::RDS::DBCluster', {
-        ServerlessV2ScalingConfiguration: {
-          MinCapacity: 1,
-          MaxCapacity: 8,
-        },
       });
     });
   });
@@ -342,34 +293,6 @@ describe('DatabaseStack', () => {
         },
       });
     });
-
-    it.skip('should handle different environments in export names', () => {
-      // Arrange
-      const environments = ['dev', 'qa', 'staging', 'prd'];
-
-      environments.forEach((env) => {
-        const envApp = new cdk.App();
-        const envVpcStack = new cdk.Stack(envApp, `${env}VpcStack`);
-        const envVpc = new ec2.Vpc(envVpcStack, `${env}Vpc`, { maxAzs: 2 });
-
-        const envProps = {
-          ...defaultProps,
-          vpc: envVpc,
-          environment: env,
-        };
-
-        // Act
-        const envStack = new DatabaseStack(envApp, `${env.toUpperCase()}DatabaseStack`, envProps);
-        const envTemplate = Template.fromStack(envStack);
-
-        // Assert
-        envTemplate.hasOutput('DatabaseClusterEndpoint', {
-          Export: {
-            Name: `test-app-${env}-db-endpoint`,
-          },
-        });
-      });
-    });
   });
 
   describe('Cost Optimization Features', () => {
@@ -416,30 +339,6 @@ describe('DatabaseStack', () => {
       expect(testStack).toBeDefined();
       expect(testStack.cluster).toBeDefined();
       expect(testStack.secret).toBeDefined();
-    });
-
-    it.skip('should create database with correct name and username', () => {
-      // Arrange
-      const customApp = new cdk.App();
-      const customVpcStack = new cdk.Stack(customApp, 'CustomVpcStack');
-      const customVpc = new ec2.Vpc(customVpcStack, 'CustomVpc', { maxAzs: 2 });
-
-      const customProps = {
-        ...defaultProps,
-        vpc: customVpc,
-        databaseName: 'production_db',
-        databaseUsername: 'prod_user',
-      };
-
-      // Act
-      const customStack = new DatabaseStack(customApp, 'CustomPropsStack', customProps);
-      const customTemplate = Template.fromStack(customStack);
-
-      // Assert
-      customTemplate.hasResourceProperties('AWS::RDS::DBCluster', {
-        DatabaseName: 'production_db',
-        MasterUsername: 'prod_user',
-      });
     });
   });
 

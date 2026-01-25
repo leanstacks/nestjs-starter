@@ -337,11 +337,6 @@ describe('ComputeStack', () => {
         RetentionInDays: 7, // One week for dev environment
       });
     });
-
-    it.skip('should configure different log retention for production', () => {
-      // This test is skipped as it requires complex environment-specific setup
-      // In real implementation, log retention would be configured based on environment
-    });
   });
 
   describe('Security Groups Configuration', () => {
@@ -545,18 +540,6 @@ describe('ComputeStack', () => {
           Name: 'test-app-dev-ecs-service',
         },
       });
-    });
-  });
-
-  describe('Resource Configuration', () => {
-    it.skip('should handle custom resource allocation', () => {
-      // This test is skipped as it would require separate test setup
-      // Custom resource allocation is handled by CDK stack configuration
-    });
-
-    it.skip('should handle different scaling configurations', () => {
-      // This test is skipped as it would require separate test setup
-      // Different scaling configurations are handled by CDK stack configuration
     });
   });
 
