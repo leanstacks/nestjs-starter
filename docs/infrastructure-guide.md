@@ -1,6 +1,6 @@
 # Infrastructure Guide
 
-This guide provides a comprehensive overview of the AWS infrastructure for the NestJS Playground backend application, including architectural decisions, deployment instructions, and operational considerations.
+This guide provides a comprehensive overview of the AWS infrastructure for the NestJS Starter backend application, including architectural decisions, deployment instructions, and operational considerations.
 
 > **Note:** This infrastructure provisions only backend/API components. There is no presentation tier (e.g., web frontend, CloudFront) included. All resources are for backend services and APIs.
 
@@ -19,7 +19,7 @@ This guide provides a comprehensive overview of the AWS infrastructure for the N
 
 ## Architecture Overview
 
-The NestJS Playground backend application is deployed on AWS using a modern, serverless-first architecture designed for cost optimization, scalability, and maintainability. The infrastructure is organized into five logical stacks:
+The NestJS Starter backend application is deployed on AWS using a modern, serverless-first architecture designed for cost optimization, scalability, and maintainability. The infrastructure is organized into five logical stacks:
 
 ### High-Level Architecture
 
@@ -65,7 +65,7 @@ The NestJS Playground backend application is deployed on AWS using a modern, ser
 CDK_HOSTED_ZONE_ID=Z1234567890ABC
 CDK_HOSTED_ZONE_NAME=example.com
 CDK_CERTIFICATE_ARN=arn:aws:acm:us-east-1:123456789012:certificate/...
-CDK_DOMAIN_NAME=nestjs-playground-api
+CDK_DOMAIN_NAME=nestjs-starter-api
 ```
 
 ### Database Stack (`database.stack.ts`)
@@ -83,7 +83,7 @@ CDK_DOMAIN_NAME=nestjs-playground-api
 
 ```typescript
 // Database environment variables
-CDK_DATABASE_NAME = nestjs_playground;
+CDK_DATABASE_NAME = nestjs_starter;
 CDK_DATABASE_USERNAME = postgres;
 CDK_DATABASE_MIN_CAPACITY = 0.5; // Minimum ACUs (configurable)
 CDK_DATABASE_MAX_CAPACITY = 1; // Maximum ACUs (configurable)
@@ -121,7 +121,7 @@ DB_HOST: cluster.clusterEndpoint.hostname
 DB_PORT: 5432
 DB_USERNAME: postgres (from secrets)
 DB_PASSWORD: auto-generated (from secrets)
-DB_DATABASE: nestjs_playground
+DB_DATABASE: nestjs_starter
 ```
 
 ### ECR Stack (`ecr.stack.ts`)
@@ -184,9 +184,9 @@ DB_HOST: 'cluster endpoint'; // from Aurora Secrets Manager
 DB_PORT: '5432'; // from Aurora Secrets Manager
 DB_USER: 'postgres'; // from Aurora Secrets Manager
 DB_PASS: 'auto-generated'; // from Aurora Secrets Manager
-DB_DATABASE: 'nestjs_playground'; // from Aurora Secrets Manager
+DB_DATABASE: 'nestjs_starter'; // from Aurora Secrets Manager
 DB_HOST_READ_ONLY: 'read endpoint'; // from Read Replica Secrets Manager (optional)
-JWT_SECRET: 'secure-jwt-secret'; // from Parameter Store: /nestjs-playground/jwt-secret
+JWT_SECRET: 'secure-jwt-secret'; // from Parameter Store: /nestjs-starter/jwt-secret
 ```
 
 **Note**: `DB_HOST_READ_ONLY` is only injected when `CDK_DATABASE_READ_REPLICA=true` in the infrastructure configuration.
@@ -251,7 +251,7 @@ CDK_SCHEDULER_TASK_CPU_UNITS = 256; // Task CPU units (default: 256)
    - JWT secret parameter must be created manually in AWS Systems Manager Parameter Store:
      ```bash
      aws ssm put-parameter \
-       --name "/nestjs-playground/jwt-secret" \
+       --name "/nestjs-starter/jwt-secret" \
        --type "SecureString" \
        --value "your-secure-jwt-secret-key"
      ```
@@ -290,7 +290,7 @@ CDK_SCHEDULER_TASK_CPU_UNITS = 256; // Task CPU units (default: 256)
 
 5. **Verify Deployment**:
    - Check AWS Console for created resources
-   - Test application URL: `https://nestjs-playground-api.example.com`
+   - Test application URL: `https://nestjs-starter-api.example.com`
 
 ### Deployment Order & Stack Dependencies
 
@@ -394,28 +394,28 @@ All configuration uses environment variables prefixed with `CDK_`:
 | ---------------------- | --------------------- | ------------------------------ | -------- |
 | `CDK_HOSTED_ZONE_ID`   | Route 53 zone ID      | `Z1234567890ABC`               | Yes      |
 | `CDK_HOSTED_ZONE_NAME` | Route 53 zone name    | `example.com`                  | Yes      |
-| `CDK_DOMAIN_NAME`      | Application subdomain | `nestjs-playground-api`        | Yes      |
+| `CDK_DOMAIN_NAME`      | Application subdomain | `nestjs-starter-api`           | Yes      |
 | `CDK_CERTIFICATE_ARN`  | SSL certificate ARN   | `arn:aws:acm:us-east-1:123...` | Yes      |
 
 #### Application Variables
 
-| Variable                      | Purpose              | Default             | Example                                 |
-| ----------------------------- | -------------------- | ------------------- | --------------------------------------- |
-| `CDK_APP_NAME`                | Application name     | `nestjs-playground` | `my-app`                                |
-| `CDK_APP_PORT`                | Application port     | `3000`              | `3000`                                  |
-| `CDK_APP_LOGGING_LEVEL`       | Log level            | `info`              | `debug`                                 |
-| `CDK_APP_CORS_ALLOWED_ORIGIN` | CORS allowed origins | `*`                 | `https://app.com,http://localhost:3000` |
-| `CDK_APP_JWT_EXPIRES_IN`      | JWT token expiration | `1h`                | `2h`, `30m`, `7d`                       |
+| Variable                      | Purpose              | Default          | Example                                 |
+| ----------------------------- | -------------------- | ---------------- | --------------------------------------- |
+| `CDK_APP_NAME`                | Application name     | `nestjs-starter` | `my-app`                                |
+| `CDK_APP_PORT`                | Application port     | `3000`           | `3000`                                  |
+| `CDK_APP_LOGGING_LEVEL`       | Log level            | `info`           | `debug`                                 |
+| `CDK_APP_CORS_ALLOWED_ORIGIN` | CORS allowed origins | `*`              | `https://app.com,http://localhost:3000` |
+| `CDK_APP_JWT_EXPIRES_IN`      | JWT token expiration | `1h`             | `2h`, `30m`, `7d`                       |
 
 #### Database Variables
 
-| Variable                    | Purpose             | Default             | Range      | Example    |
-| --------------------------- | ------------------- | ------------------- | ---------- | ---------- |
-| `CDK_DATABASE_NAME`         | Database name       | `nestjs_playground` | -          | `myapp_db` |
-| `CDK_DATABASE_USERNAME`     | Database username   | `postgres`          | -          | `admin`    |
-| `CDK_DATABASE_MIN_CAPACITY` | Min Aurora ACUs     | `0.5`               | 0.5-16     | `1.0`      |
-| `CDK_DATABASE_MAX_CAPACITY` | Max Aurora ACUs     | `1`                 | 1-16       | `4.0`      |
-| `CDK_DATABASE_READ_REPLICA` | Enable read replica | `false`             | true/false | `true`     |
+| Variable                    | Purpose             | Default          | Range      | Example    |
+| --------------------------- | ------------------- | ---------------- | ---------- | ---------- |
+| `CDK_DATABASE_NAME`         | Database name       | `nestjs_starter` | -          | `myapp_db` |
+| `CDK_DATABASE_USERNAME`     | Database username   | `postgres`       | -          | `admin`    |
+| `CDK_DATABASE_MIN_CAPACITY` | Min Aurora ACUs     | `0.5`            | 0.5-16     | `1.0`      |
+| `CDK_DATABASE_MAX_CAPACITY` | Max Aurora ACUs     | `1`              | 1-16       | `4.0`      |
+| `CDK_DATABASE_READ_REPLICA` | Enable read replica | `false`          | true/false | `true`     |
 
 **Read Replica Notes:**
 
@@ -451,12 +451,12 @@ All configuration uses environment variables prefixed with `CDK_`:
 
 #### Tagging Variables
 
-| Variable        | Purpose             | Default            | Example             |
-| --------------- | ------------------- | ------------------ | ------------------- |
-| `CDK_TAG_APP`   | Application tag     | `${APP_NAME}`      | `nestjs-playground` |
-| `CDK_TAG_ENV`   | Environment tag     | `${ENVIRONMENT}`   | `production`        |
-| `CDK_TAG_OU`    | Organizational unit | `engineering`      | `backend-team`      |
-| `CDK_TAG_OWNER` | Resource owner      | `team@example.com` | `john@company.com`  |
+| Variable        | Purpose             | Default            | Example            |
+| --------------- | ------------------- | ------------------ | ------------------ |
+| `CDK_TAG_APP`   | Application tag     | `${APP_NAME}`      | `nestjs-starter`   |
+| `CDK_TAG_ENV`   | Environment tag     | `${ENVIRONMENT}`   | `production`       |
+| `CDK_TAG_OU`    | Organizational unit | `engineering`      | `backend-team`     |
+| `CDK_TAG_OWNER` | Resource owner      | `team@example.com` | `john@company.com` |
 
 ### Multi-Environment Strategy
 
@@ -491,7 +491,7 @@ CDK_ENVIRONMENT=prd npm run deploy
 1. **HTTPS Only**: SSL termination at load balancer with HTTP→HTTPS redirect
 2. **Container Security**: Regular image scanning and minimal base images
 3. **Secrets Management**: Database credentials in AWS Secrets Manager, JWT secrets in Systems Manager Parameter Store
-4. **JWT Authentication**: JWT secret stored securely in `/nestjs-playground/jwt-secret` Parameter Store parameter
+4. **JWT Authentication**: JWT secret stored securely in `/nestjs-starter/jwt-secret` Parameter Store parameter
 5. **IAM Roles**: Least privilege access for ECS tasks and Parameter Store access
 
 ### Data Security
@@ -601,9 +601,9 @@ Set up alerts for:
    ```bash
    # Deploy previous image version
    aws ecs update-service \
-     --cluster nestjs-playground-dev \
-     --service nestjs-playground-dev \
-     --task-definition nestjs-playground-dev:previous-revision
+     --cluster nestjs-starter-dev \
+     --service nestjs-starter-dev \
+     --task-definition nestjs-starter-dev:previous-revision
    ```
 
 ## Troubleshooting
@@ -637,27 +637,27 @@ Set up alerts for:
 ```bash
 # Check stack status
 aws cloudformation describe-stacks \
-  --stack-name nestjs-playground-dev-compute
+  --stack-name nestjs-starter-dev-compute
 
 # View ECS service events
 aws ecs describe-services \
-  --cluster nestjs-playground-dev \
-  --services nestjs-playground-dev
+  --cluster nestjs-starter-dev \
+  --services nestjs-starter-dev
 
 # Get recent application logs
 aws logs filter-log-events \
-  --log-group-name /ecs/nestjs-playground-dev \
+  --log-group-name /ecs/nestjs-starter-dev \
   --start-time $(date -d '1 hour ago' +%s)000
 
 # Get scheduled task logs
 aws logs filter-log-events \
-  --log-group-name /ecs/nestjs-playground-scheduler-dev \
+  --log-group-name /ecs/nestjs-starter-scheduler-dev \
   --start-time $(date -d '1 hour ago' +%s)000
 
 # Check scheduled task service status
 aws ecs describe-services \
-  --cluster nestjs-playground-dev \
-  --services nestjs-playground-scheduler-dev
+  --cluster nestjs-starter-dev \
+  --services nestjs-starter-scheduler-dev
 ```
 
 ## Best Practices
@@ -701,4 +701,4 @@ aws ecs describe-services \
 
 ---
 
-This infrastructure provides a solid foundation for the NestJS Playground application with built-in scalability, security, and cost optimization. Regular review and updates ensure the infrastructure continues to meet application requirements as it evolves.
+This infrastructure provides a solid foundation for the NestJS Starter application with built-in scalability, security, and cost optimization. Regular review and updates ensure the infrastructure continues to meet application requirements as it evolves.

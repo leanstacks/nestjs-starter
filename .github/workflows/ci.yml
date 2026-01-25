@@ -66,7 +66,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ vars.AWS_ROLE_ARN_DEV }}
-          role-session-name: ci-nestjs-playground
+          role-session-name: ci-nestjs-starter
           aws-region: ${{ vars.AWS_REGION }}
 
       - name: Synthesize CDK stacks

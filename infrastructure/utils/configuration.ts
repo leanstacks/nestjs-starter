@@ -7,7 +7,7 @@ import { z } from 'zod';
 const configurationSchema = z
   .object({
     // Application configuration
-    CDK_APP_NAME: z.string().min(1).default('nestjs-playground'),
+    CDK_APP_NAME: z.string().min(1).default('nestjs-starter'),
     CDK_APP_PORT: z.coerce.number().int().positive().default(3000),
     CDK_APP_LOGGING_LEVEL: z.enum(['debug', 'info', 'warn', 'error']).default('info'),
     CDK_APP_CORS_ALLOWED_ORIGIN: z.string().default('*'),
@@ -33,7 +33,7 @@ const configurationSchema = z
     CDK_SCHEDULER_TASK_CPU_UNITS: z.coerce.number().int().positive().default(256),
 
     // Database configuration
-    CDK_DATABASE_NAME: z.string().min(1).default('nestjs_playground'),
+    CDK_DATABASE_NAME: z.string().min(1).default('nestjs_starter'),
     CDK_DATABASE_USERNAME: z.string().min(1).default('postgres'),
     CDK_DATABASE_MIN_CAPACITY: z.coerce.number().positive().default(0.5),
     CDK_DATABASE_MAX_CAPACITY: z.coerce.number().positive().default(1),

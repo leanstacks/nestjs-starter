@@ -46,7 +46,7 @@ jobs:
       # Step 2: Tag the ECR image
       - name: Tag ECR image
         run: |
-          REPOSITORY_NAME="nestjs-playground"
+          REPOSITORY_NAME="nestjs-starter"
 
           echo "🔍 Getting ECR repository details..."
           ECR_REPOSITORY_URI=$(aws ecr describe-repositories \
@@ -89,7 +89,7 @@ jobs:
       # Step 3: Verify the new tag
       - name: Verify new tag
         run: |
-          REPOSITORY_NAME="nestjs-playground"
+          REPOSITORY_NAME="nestjs-starter"
 
           echo "🔍 Verifying new tag exists..."
           TAG_EXISTS=$(aws ecr describe-images \

@@ -43,7 +43,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ vars.AWS_ROLE_ARN_DEV }}
-          role-session-name: deploy-nestjs-playground-dev
+          role-session-name: deploy-nestjs-starter-dev
           aws-region: ${{ vars.AWS_REGION }}
 
       # Step 4: Install the app dependencies
@@ -103,7 +103,7 @@ jobs:
         working-directory: ./infrastructure
         run: |
           echo "🚀 Deploying ECR stack..."
-          npx cdk deploy nestjs-playground-ecr-dev --require-approval never
+          npx cdk deploy nestjs-starter-ecr-dev --require-approval never
           echo "✅ ECR stack deployed successfully"
 
       # Step 13: Generate semver tag
@@ -132,7 +132,7 @@ jobs:
       - name: Build and push Docker image to ECR
         run: |
           # Get ECR repository URI
-          ECR_REPOSITORY_URI=$(aws ecr describe-repositories --repository-names nestjs-playground --region ${{ vars.AWS_REGION }} --query 'repositories[0].repositoryUri' --output text)
+          ECR_REPOSITORY_URI=$(aws ecr describe-repositories --repository-names nestjs-starter --region ${{ vars.AWS_REGION }} --query 'repositories[0].repositoryUri' --output text)
           echo "ECR Repository URI: $ECR_REPOSITORY_URI"
 
           # Login to ECR

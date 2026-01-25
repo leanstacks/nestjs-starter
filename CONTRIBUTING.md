@@ -1,12 +1,12 @@
-# Contributing to nestjs-playground
+# Contributing to NestJS Starter
 
-Thank you for your interest in contributing to **nestjs-playground**! This repository is primarily used for the owner's personal development, but others are welcome to fork it for their own purposes or contribute improvements. Please read the following guidelines to help us maintain a collaborative and productive environment.
+Thank you for your interest in contributing to **nestjs-starter**! This repository is primarily maintained by the owner, but others are welcome to fork it for their own purposes or suggest improvements. Please read the following guidelines to help us maintain a collaborative and productive environment.
 
 ## How Can I Contribute?
 
 ### Reporting Bugs
 
-- Use [GitHub Issues](https://github.com/mwarman/nestjs-playground/issues) to report bugs.
+- Use [GitHub Issues](https://github.com/mwarman/nestjs-playground/issues) to report bugs with the appropriate issue template.
 - Please include:
   - A clear and descriptive title
   - Steps to reproduce
@@ -55,4 +55,4 @@ By contributing, you agree that your contributions will be licensed under the [M
 
 ---
 
-Thank you for helping make **nestjs-playground** better!
+Thank you for helping make the **NestJS Starter** project better!

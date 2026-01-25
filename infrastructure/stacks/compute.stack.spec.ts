@@ -63,7 +63,7 @@ describe('ComputeStack', () => {
 
     // Create JWT secret parameter for testing
     const jwtSecretParameter = new ssm.StringParameter(stack, 'JWTSecretParameter', {
-      parameterName: '/nestjs-playground/jwt-secret',
+      parameterName: '/nestjs-starter/jwt-secret',
       stringValue: 'test-jwt-secret-value',
     });
 

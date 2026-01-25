@@ -1,6 +1,6 @@
 # Documentation Table of Contents
 
-Welcome to the documentation for the NestJS Playground project. This directory contains guides and references for development, configuration, infrastructure, and DevOps practices. Use the links below to navigate each topic.
+Welcome to the documentation for the NestJS Starter project. This directory contains guides and references for development, configuration, infrastructure, and DevOps practices. Use the links below to navigate each topic.
 
 ## Table of Contents
 

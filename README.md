@@ -1,4 +1,4 @@
-# NestJS Playground
+# NestJS Starter
 
 [![Continuous Integration](https://github.com/mwarman/nestjs-playground/actions/workflows/ci.yml/badge.svg)](https://github.com/mwarman/nestjs-playground/actions/workflows/ci.yml)
 &nbsp;
@@ -10,7 +10,7 @@
 
 ## Overview
 
-This is a starter repository for building efficient and scalable server-side applications using the [NestJS](https://nestjs.com/) framework and TypeScript. It provides a simple structure for rapid development and experimentation.
+This is a starter kit for creating new NestJS application components. It provides efficient and scalable server-side applications using the [NestJS](https://nestjs.com/) framework and TypeScript with a well-structured foundation for rapid development.
 
 ## Getting Started
 
@@ -38,6 +38,7 @@ npm run start
 | npm run build        | Compile the TypeScript source code           |
 | npm run clean        | Remove build output and temporary files      |
 | npm run lint         | Run ESLint to check code quality             |
+| npm run lint:fix     | Fix code quality issues with ESLint          |
 | npm run format       | Format code using Prettier                   |
 | npm run format:check | Check code formatting without changing files |
 | npm run start        | Start the application (development)          |
@@ -50,6 +51,16 @@ npm run start
 ## Project Structure
 
 ```
+├── .github/                             # GitHub workflows and configuration
+|
+├── docs/                                # Project documentation
+|  ├── configuration-guide.md            # Configuration guide
+|  └── devops-guide.md                   # DevOps guide
+|
+├── infrastructure/                      # AWS CDK Infrastructure as Code
+│   ├── stacks/                          # AWS CDK stacks
+|   └── app.ts                           # AWS CDK application
+|
 ├── src/                                 # Main application source code
 │   ├── app.module.ts                    # App module
 │   ├── main.ts                          # Application entry point
@@ -67,15 +78,12 @@ npm run start
 ├── test/                                # End-to-end tests
 │   ├── tasks.e2e-spec.ts                # E2E test spec
 │   └── jest-e2e.json                    # Jest E2E config
+|
 ├── .env.example                         # Example environment variables
 ├── package.json                         # Project metadata and scripts
 ├── tsconfig.json                        # TypeScript configuration
 ├── nest-cli.json                        # NestJS CLI configuration
-├── README.md                            # Project documentation
-├── .github/                             # GitHub Actions workflows and settings
-└── docs/                                # Project documentation
-   ├── configuration-guide.md            # Configuration guide
-   └── devops-guide.md                   # DevOps guide
+└── README.md                            # Project documentation
 ```
 
 ## Documentation Hub

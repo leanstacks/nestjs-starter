@@ -35,8 +35,8 @@ async function bootstrap() {
 
   // Set up Swagger for API documentation
   const documentBuilder = new DocumentBuilder()
-    .setTitle('NestJS Playground')
-    .setDescription('API documentation for the NestJS Playground application.')
+    .setTitle('NestJS Starter')
+    .setDescription('API documentation for the NestJS Starter application.')
     .setVersion('1.0')
     .addGlobalResponse(
       { status: 400, description: 'Bad Request' },

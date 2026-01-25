@@ -33,10 +33,10 @@ export class UpdateTaskDto {
 
   /**
    * Optional detailed description providing more context about the task.
-   * @example "Write comprehensive documentation for the NestJS playground project"
+   * @example "Write comprehensive documentation for the NestJS Starter project"
    */
   @ApiProperty({
-    example: 'Write comprehensive documentation for the NestJS playground project',
+    example: 'Write comprehensive documentation for the NestJS Starter project',
     description: 'Detailed description of the task',
     required: false,
   })

@@ -1,6 +1,6 @@
 # Docker Guide
 
-This guide provides comprehensive instructions for building, running, and managing Docker containers for the NestJS Playground application.
+This guide provides comprehensive instructions for building, running, and managing Docker containers for the NestJS Starter application.
 
 ## Table of Contents
 
@@ -36,14 +36,14 @@ The application uses a multi-stage Dockerfile for optimized production builds.
 Build the Docker image with a tag:
 
 ```bash
-docker build -t nestjs-playground .
+docker build -t nestjs-starter .
 ```
 
 ### Build with Custom Tag
 
 ```bash
-docker build -t nestjs-playground:latest .
-docker build -t nestjs-playground:v1.0.0 .
+docker build -t nestjs-starter:latest .
+docker build -t nestjs-starter:v1.0.0 .
 ```
 
 ### Build with No Cache
@@ -51,7 +51,7 @@ docker build -t nestjs-playground:v1.0.0 .
 Force a fresh build without using cached layers:
 
 ```bash
-docker build --no-cache -t nestjs-playground .
+docker build --no-cache -t nestjs-starter .
 ```
 
 ### Build for Specific Platform
@@ -60,10 +60,10 @@ Build for a specific platform (useful for cross-platform deployment):
 
 ```bash
 # For ARM64 (Apple Silicon, ARM servers)
-docker build --platform linux/arm64 -t nestjs-playground:arm64 .
+docker build --platform linux/arm64 -t nestjs-starter:arm64 .
 
 # For AMD64 (Intel/AMD x86_64)
-docker build --platform linux/amd64 -t nestjs-playground:amd64 .
+docker build --platform linux/amd64 -t nestjs-starter:amd64 .
 ```
 
 ## Running the Container
@@ -73,7 +73,7 @@ docker build --platform linux/amd64 -t nestjs-playground:amd64 .
 Start the container and map port 3000:
 
 ```bash
-docker run -p 3000:3000 nestjs-playground
+docker run -p 3000:3000 nestjs-starter
 ```
 
 ### Run in Detached Mode
@@ -81,7 +81,7 @@ docker run -p 3000:3000 nestjs-playground
 Run the container in the background:
 
 ```bash
-docker run -d -p 3000:3000 --name nestjs-app nestjs-playground
+docker run -d -p 3000:3000 --name nestjs-app nestjs-starter
 ```
 
 ### Run with Custom Port Mapping
@@ -89,7 +89,7 @@ docker run -d -p 3000:3000 --name nestjs-app nestjs-playground
 Map to a different host port:
 
 ```bash
-docker run -d -p 8080:3000 --name nestjs-app nestjs-playground
+docker run -d -p 8080:3000 --name nestjs-app nestjs-starter
 ```
 
 Access the application at `http://localhost:8080`
@@ -99,7 +99,7 @@ Access the application at `http://localhost:8080`
 Automatically restart the container if it stops:
 
 ```bash
-docker run -d -p 3000:3000 --name nestjs-app --restart unless-stopped nestjs-playground
+docker run -d -p 3000:3000 --name nestjs-app --restart unless-stopped nestjs-starter
 ```
 
 ## Environment Variables
@@ -109,7 +109,7 @@ docker run -d -p 3000:3000 --name nestjs-app --restart unless-stopped nestjs-pla
 #### Single Environment Variable
 
 ```bash
-docker run -p 3000:3000 -e NODE_ENV=production nestjs-playground
+docker run -p 3000:3000 -e NODE_ENV=production nestjs-starter
 ```
 
 #### Multiple Environment Variables
@@ -119,7 +119,7 @@ docker run -p 3000:3000 \
   -e NODE_ENV=production \
   -e PORT=3000 \
   -e DATABASE_URL=postgresql://user:pass@host:5432/db \
-  nestjs-playground
+  nestjs-starter
 ```
 
 #### Using Environment File
@@ -136,7 +136,7 @@ LOG_LEVEL=info
 Run with environment file:
 
 ```bash
-docker run -p 3000:3000 --env-file .env nestjs-playground
+docker run -p 3000:3000 --env-file .env nestjs-starter
 ```
 
 #### Environment Variables in Detached Mode
@@ -146,7 +146,7 @@ docker run -d -p 3000:3000 \
   --name nestjs-app \
   --env-file .env \
   --restart unless-stopped \
-  nestjs-playground
+  nestjs-starter
 ```
 
 ### Common Environment Variables
@@ -261,14 +261,14 @@ docker system prune -a --volumes
 #### Remove Specific Image
 
 ```bash
-docker rmi nestjs-playground
-docker rmi nestjs-playground:v1.0.0
+docker rmi nestjs-starter
+docker rmi nestjs-starter:v1.0.0
 ```
 
 #### Remove Multiple Images
 
 ```bash
-docker rmi $(docker images nestjs-playground -q)
+docker rmi $(docker images nestjs-starter -q)
 ```
 
 ## Development Workflow
@@ -281,7 +281,7 @@ For development, you might want to mount your source code:
 docker run -p 3000:3000 \
   -v $(pwd)/src:/usr/src/app/src \
   -e NODE_ENV=development \
-  nestjs-playground
+  nestjs-starter
 ```
 
 ### Docker Compose for Development
@@ -306,7 +306,7 @@ services:
   db:
     image: postgres:15-alpine
     environment:
-      - POSTGRES_DB=nestjs_playground
+      - POSTGRES_DB=nestjs_starter
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
     ports:
@@ -338,13 +338,13 @@ docker-compose down -v
 
 ```bash
 # Build and run in one command
-docker build -t nestjs-playground . && docker run -p 3000:3000 nestjs-playground
+docker build -t nestjs-starter . && docker run -p 3000:3000 nestjs-starter
 
 # Rebuild and restart
 docker stop nestjs-app || true
 docker rm nestjs-app || true
-docker build -t nestjs-playground .
-docker run -d -p 3000:3000 --name nestjs-app nestjs-playground
+docker build -t nestjs-starter .
+docker run -d -p 3000:3000 --name nestjs-app nestjs-starter
 ```
 
 ## Troubleshooting
@@ -361,7 +361,7 @@ lsof -i :3000
 kill -9 <PID>
 
 # Or use different port
-docker run -p 3001:3000 nestjs-playground
+docker run -p 3001:3000 nestjs-starter
 ```
 
 #### Container Exits Immediately
@@ -375,7 +375,7 @@ docker logs nestjs-app
 Run with interactive mode to debug:
 
 ```bash
-docker run -it nestjs-playground sh
+docker run -it nestjs-starter sh
 ```
 
 #### Image Build Fails
@@ -383,7 +383,7 @@ docker run -it nestjs-playground sh
 Build with verbose output:
 
 ```bash
-docker build --progress=plain -t nestjs-playground .
+docker build --progress=plain -t nestjs-starter .
 ```
 
 #### Container Cannot Connect to External Services
@@ -395,17 +395,17 @@ Check network configuration:
 docker inspect nestjs-app
 
 # Use host network (Linux only)
-docker run --network host nestjs-playground
+docker run --network host nestjs-starter
 ```
 
 ### Debugging Commands
 
 ```bash
 # Inspect image
-docker inspect nestjs-playground
+docker inspect nestjs-starter
 
 # Check image history
-docker history nestjs-playground
+docker history nestjs-starter
 
 # Check container stats
 docker stats nestjs-app
@@ -447,7 +447,7 @@ docker run -d -p 3000:3000 \
   --memory="512m" \
   --cpus="1.0" \
   --restart unless-stopped \
-  nestjs-playground
+  nestjs-starter
 ```
 
 ## Additional Resources
