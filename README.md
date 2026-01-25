@@ -1,9 +1,9 @@
 # NestJS Starter
 
-[![Continuous Integration](https://github.com/mwarman/nestjs-playground/actions/workflows/ci.yml/badge.svg)](https://github.com/mwarman/nestjs-playground/actions/workflows/ci.yml)
+[![Continuous Integration](https://github.com/leanstacks/nestjs-starter/actions/workflows/ci.yml/badge.svg)](https://github.com/leanstacks/nestjs-starter/actions/workflows/ci.yml)
 &nbsp;
 &nbsp;
-[![Code Quality](https://github.com/mwarman/nestjs-playground/actions/workflows/code-quality.yml/badge.svg)](https://github.com/mwarman/nestjs-playground/actions/workflows/code-quality.yml)
+[![Code Quality](https://github.com/leanstacks/nestjs-starter/actions/workflows/code-quality.yml/badge.svg)](https://github.com/leanstacks/nestjs-starter/actions/workflows/code-quality.yml)
 
 ## Overview
 
