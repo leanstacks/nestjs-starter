@@ -6,7 +6,7 @@ Thank you for your interest in contributing to **nestjs-starter**! This reposito
 
 ### Reporting Bugs
 
-- Use [GitHub Issues](https://github.com/mwarman/nestjs-playground/issues) to report bugs with the appropriate issue template.
+- Use [GitHub Issues](https://github.com/leanstacks/nestjs-starter/issues) to report bugs with the appropriate issue template.
 - Please include:
   - A clear and descriptive title
   - Steps to reproduce

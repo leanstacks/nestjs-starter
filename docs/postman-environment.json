@@ -13,14 +13,14 @@
 			"key": "username",
 			"value": "",
 			"type": "default",
-			"description": "An authentication username, e.g. SmilingBob123",
+			"description": "An authentication username, e.g. SmilingBob123 (set by API call)",
 			"enabled": true
 		},
 		{
 			"key": "password",
 			"value": "",
 			"type": "secret",
-			"description": "An authentication password",
+			"description": "An authentication password (set by API call)",
 			"enabled": true
 		},
 		{
@@ -47,6 +47,6 @@
 	],
 	"color": null,
 	"_postman_variable_scope": "environment",
-	"_postman_exported_at": "2026-01-23T13:08:41.323Z",
-	"_postman_exported_using": "Postman/11.81.3"
+	"_postman_exported_at": "2026-01-25T12:04:03.055Z",
+	"_postman_exported_using": "Postman/11.81.4"
 }
