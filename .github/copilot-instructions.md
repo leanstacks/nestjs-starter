@@ -168,4 +168,4 @@ project-root/
 
 - Use `npm run test` to run all tests.
 - Use `npm run test <component>` to run tests for a specific component or source directory, e.g., `npm run test users`.
-- Use `npm run test:cov` to generate a coverage report.
+- Use `npm run test:coverage` to generate a coverage report.

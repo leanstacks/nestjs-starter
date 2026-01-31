@@ -1,6 +1,6 @@
 {
   "name": "nestjs-starter-infrastructure",
-  "version": "0.3.0",
+  "version": "1.0.0-beta.1",
   "description": "AWS CDK infrastructure as code for the NestJS Starter application.",
   "private": true,
   "scripts": {
@@ -27,8 +27,8 @@
   },
   "devDependencies": {
     "@types/jest": "30.0.0",
-    "@types/node": "25.0.10",
-    "aws-cdk": "2.1103.0",
+    "@types/node": "25.1.0",
+    "aws-cdk": "2.1104.0",
     "jest": "30.2.0",
     "rimraf": "6.1.2",
     "ts-jest": "29.4.6",

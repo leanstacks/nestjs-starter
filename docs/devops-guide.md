@@ -56,7 +56,7 @@ Currently, the project uses GitHub Actions for CI/CD. Below is a detailed descri
   4. Lint code (`npm run lint`)
   5. Check code formatting (`npm run format:check`)
   6. Build application (`npm run build`)
-  7. Run tests with coverage (`npm run test:cov`)
+  7. Run tests with coverage (`npm run test:coverage`)
   8. Install infrastructure dependencies (`npm ci` in `infrastructure/`)
   9. Build infrastructure TypeScript code (`npm run build` in `infrastructure/`)
   10. Create infrastructure `.env` file from GitHub variable (`CDK_ENV_DEV`)
