@@ -139,6 +139,10 @@ jobs:
             echo "✅ All packages are up to date" >> $GITHUB_STEP_SUMMARY
           fi
 
+      - name: Install infrastructure dependencies
+        working-directory: ./infrastructure
+        run: npm ci
+
       - name: Run infrastructure tests with detailed coverage
         working-directory: ./infrastructure
         run: |
@@ -217,6 +221,15 @@ jobs:
           else
             echo "✅ All packages are up to date" >> $GITHUB_STEP_SUMMARY
           fi
+
+      - name: Clean up sensitive files
+        if: always()
+        run: |
+          echo "🧹 Cleaning up sensitive files..."
+          rm -f .env
+          rm -f infrastructure/.env
+          rm -rf infrastructure/cdk.out
+          echo "✅ Sensitive files cleaned up"
 
       - name: Archive test results
         if: always()
