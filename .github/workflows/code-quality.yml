@@ -9,6 +9,7 @@ on:
     branches: [main]
     paths:
       - 'src/**'
+      - 'infrastructure/**'
       - 'package.json'
       - 'tsconfig.json'
       - '.github/workflows/**'
@@ -21,12 +22,12 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0 # Full history for better analysis
 
       - name: Setup Node.js
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
           cache: 'npm'
@@ -110,7 +111,7 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "## Security Audit" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          npm audit --audit-level=moderate > security-output.txt 2>&1 || true
+          npm audit --audit-level moderate --omit dev > security-output.txt 2>&1 || true
 
           if grep -q "found 0 vulnerabilities" security-output.txt; then
             echo "✅ No security vulnerabilities found" >> $GITHUB_STEP_SUMMARY
@@ -138,6 +139,98 @@ jobs:
             echo "✅ All packages are up to date" >> $GITHUB_STEP_SUMMARY
           fi
 
+      - name: Install infrastructure dependencies
+        working-directory: ./infrastructure
+        run: npm ci
+
+      - name: Run infrastructure tests with detailed coverage
+        working-directory: ./infrastructure
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Infrastructure Test Coverage Analysis" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          npm run test:coverage -- --silent --verbose
+
+          # Extract coverage summary
+          if [ -f coverage/coverage-summary.json ]; then
+            echo "### Coverage Summary:" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            
+            # Use Node.js to parse JSON and create a table
+            node -e "
+              const fs = require('fs');
+              const coverage = JSON.parse(fs.readFileSync('coverage/coverage-summary.json', 'utf8'));
+              const total = coverage.total;
+              
+              console.log('| Metric | Percentage | Covered/Total |');
+              console.log('|--------|------------|---------------|');
+              console.log(\`| Lines | \${total.lines.pct}% | \${total.lines.covered}/\${total.lines.total} |\`);
+              console.log(\`| Functions | \${total.functions.pct}% | \${total.functions.covered}/\${total.functions.total} |\`);
+              console.log(\`| Branches | \${total.branches.pct}% | \${total.branches.covered}/\${total.branches.total} |\`);
+              console.log(\`| Statements | \${total.statements.pct}% | \${total.statements.covered}/\${total.statements.total} |\`);
+            " >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Infrastructure build check
+        working-directory: ./infrastructure
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Infrastructure Build" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          npm run build > infra-tsc-output.txt 2>&1
+          if [ $? -eq 0 ]; then
+            echo "✅ Build successful" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Build failed:" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            cat infra-tsc-output.txt >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Infrastructure security audit
+        working-directory: ./infrastructure
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Infrastructure Security Audit" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          npm audit --audit-level moderate --omit dev > infra-security-output.txt 2>&1 || true
+
+          if grep -q "found 0 vulnerabilities" infra-security-output.txt; then
+            echo "✅ No security vulnerabilities found" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "⚠️ Security vulnerabilities detected:" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            cat infra-security-output.txt >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Infrastructure package analysis
+        working-directory: ./infrastructure
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Infrastructure Package Analysis" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Check for outdated packages
+          echo "### Outdated Packages:" >> $GITHUB_STEP_SUMMARY
+          npm outdated > infra-outdated-output.txt 2>&1 || true
+          if [ -s infra-outdated-output.txt ]; then
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            cat infra-outdated-output.txt >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ All packages are up to date" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Clean up sensitive files
+        if: always()
+        run: |
+          echo "🧹 Cleaning up sensitive files..."
+          rm -f .env
+          rm -f infrastructure/.env
+          rm -rf infrastructure/cdk.out
+          echo "✅ Sensitive files cleaned up"
+
       - name: Archive test results
         if: always()
         uses: actions/upload-artifact@v4
@@ -148,7 +241,9 @@ jobs:
             eslint-output.txt
             prettier-output.txt
             tsc-output.txt
-            infra-tsc-output.txt
             security-output.txt
             outdated-output.txt
+            infra-tsc-output.txt
+            infra-security-output.txt
+            infra-outdated-output.txt
           retention-days: 7

@@ -10,7 +10,7 @@ const config: Config = {
   },
   collectCoverageFrom: ['utils/**/*.ts', 'stacks/**/*.ts'],
   coverageDirectory: 'coverage',
-  coverageReporters: ['text', 'lcov', 'html', 'json'],
+  coverageReporters: ['text', 'lcov', 'html', 'json', 'json-summary'],
   // CDK-specific settings
   testTimeout: 30000, // CDK tests can take longer
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
