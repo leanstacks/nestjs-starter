@@ -1,6 +1,6 @@
 {
   "name": "nestjs-starter-infrastructure",
-  "version": "1.1.0-alpha.1",
+  "version": "1.1.0",
   "description": "AWS CDK infrastructure as code for the NestJS Starter application.",
   "private": true,
   "scripts": {
