@@ -29,18 +29,18 @@ jobs:
     steps:
       # Step 1: Checkout repository
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       # Step 2: Setup Node.js using .nvmrc
       - name: Setup Node.js
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
           cache: 'npm'
 
       # Step 3: Configure AWS credentials
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: ${{ inputs.environment == 'dev' && vars.AWS_ROLE_ARN_DEV || inputs.environment == 'qa' && vars.AWS_ROLE_ARN_QA || vars.AWS_ROLE_ARN_PRD }}
           role-session-name: teardown-nestjs-starter-${{ inputs.environment }}
