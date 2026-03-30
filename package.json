@@ -1,6 +1,6 @@
 {
-  "name": "nestjs-starter",
-  "version": "1.1.0",
+  "name": "@leanstacks/nestjs-starter",
+  "version": "1.2.0-alpha.1",
   "description": "A starter kit for NestJS application components.",
   "author": "Matthew Warman",
   "license": "MIT",
