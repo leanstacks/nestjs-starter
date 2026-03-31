@@ -1,6 +1,6 @@
 {
   "name": "@leanstacks/nestjs-starter",
-  "version": "1.2.0-alpha.1",
+  "version": "1.2.0",
   "description": "A starter kit for NestJS application components.",
   "author": "Matthew Warman",
   "license": "MIT",
@@ -61,8 +61,8 @@
   "devDependencies": {
     "@eslint/eslintrc": "3.3.5",
     "@eslint/js": "10.0.1",
-    "@nestjs/cli": "11.0.16",
-    "@nestjs/schematics": "11.0.9",
+    "@nestjs/cli": "11.0.17",
+    "@nestjs/schematics": "11.0.10",
     "@nestjs/testing": "11.1.17",
     "@types/bcrypt": "6.0.0",
     "@types/cron": "2.0.1",
