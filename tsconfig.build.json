@@ -1,7 +1,8 @@
+/**
+ * TypeScript configuration for the NestJS build process. Used by NestJS internally.
+ * Extends the main NestJS tsconfig.json.
+ */
 {
   "extends": "./tsconfig.json",
-  "compilerOptions": {
-    "rootDir": "./src"
-  },
   "exclude": ["node_modules", "test", "dist", "infrastructure", "**/*spec.ts"]
 }

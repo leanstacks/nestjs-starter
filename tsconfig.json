@@ -1,26 +1,25 @@
+/**
+ * TypeScript configuration for the NestJS project.
+ * Extends the base configuration defined in tsconfig.base.json.
+ */
 {
+  "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
-    "resolvePackageJsonExports": true,
-    "esModuleInterop": true,
-    "isolatedModules": true,
-    "declaration": true,
-    "removeComments": true,
-    "emitDecoratorMetadata": true,
+    /* Overrides required specifically by NestJS */
     "experimentalDecorators": true,
-    "allowSyntheticDefaultImports": true,
-    "target": "ES2023",
-    "sourceMap": true,
+    "emitDecoratorMetadata": true,
+
+    /* Compilation Directives */
     "outDir": "./dist",
-    "baseUrl": "./",
-    "incremental": false,
-    "skipLibCheck": true,
-    "strictNullChecks": true,
-    "forceConsistentCasingInFileNames": true,
-    "noImplicitAny": false,
-    "strictBindCallApply": false,
-    "noFallthroughCasesInSwitch": false
+    "rootDir": "./src",
+
+    /* Type Definitions */
+    "types": ["node", "jest"],
+
+    /* Path Aliases */
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
-  "exclude": ["infrastructure"]
+  "include": ["src"]
 }
