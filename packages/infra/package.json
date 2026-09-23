@@ -1,0 +1,27 @@
+{
+  "name": "@nestjs-starter/infra",
+  "private": true,
+  "type": "module",
+  "version": "1.4.0-alpha.1",
+  "scripts": {
+    "build": "tsc --project tsconfig.build.json",
+    "clean": "rimraf cdk.out coverage dist",
+    "cdk": "cdk",
+    "deploy": "cdk deploy",
+    "deploy:all": "cdk deploy --all --require-approval never",
+    "destroy": "cdk destroy",
+    "destroy:all": "cdk destroy --all --force",
+    "diff": "cdk diff",
+    "synth": "cdk synth",
+    "test": "vitest run --silent passed-only",
+    "test:watch": "vitest --watch",
+    "test:coverage": "vitest run --coverage --silent passed-only"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "aws-cdk": "2.1142.0",
+    "aws-cdk-lib": "2.270.0",
+    "constructs": "10.8.1",
+    "dotenv": "18.0.1"
+  }
+}

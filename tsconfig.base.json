@@ -1,36 +1,36 @@
 /**
  * Base TypeScript configuration for the project.
- * This configuration is extended by other tsconfig files.
  */
 {
   "compilerOptions": {
-    /* Target & Environment (Node 24 supports ES2024 / ESNext) */
-    "target": "ES2022",
-    "lib": ["ES2023"],
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    /* Language & Environment */
+    "target": "ES2023",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
 
-    /* Strict Type-Checking Options */
-    "strict": false,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
-    "strictFunctionTypes": true,
-    "noImplicitThis": true,
-    "alwaysStrict": true,
+    /* Module Resolution */
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "types": ["vitest/globals", "node"],
 
-    /* Additional Checks */
-    // "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
+    /* Output */
+    // "rootDir": ".",
+    // "outDir": "./dist",
+    "declaration": true,
+    "removeComments": true,
+    "sourceMap": true,
 
-    /* Interop Options */
+    /* Strictness & Safety */
+    "strict": true,
+    "strictPropertyInitialization": false,
+
+    /* Misc */
+    "resolvePackageJsonExports": true,
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-
-    /* Optimization */
-    "skipLibCheck": true,
-    "resolveJsonModule": true
+    "isolatedModules": true,
+    "allowSyntheticDefaultImports": true,
+    "incremental": true,
+    "skipLibCheck": true
   },
   "exclude": ["node_modules", "dist", "coverage"]
 }
