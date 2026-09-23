@@ -12,7 +12,7 @@
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
-    "lint": "oxlint --type-aware src/ test/",
+    "lint": "oxlint --type-aware src/ test/ --deny-warnings",
     "lint:fix": "oxlint --type-aware --fix src/ test/",
     "test": "vitest run --silent passed-only",
     "test:watch": "vitest",
