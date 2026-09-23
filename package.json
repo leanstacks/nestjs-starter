@@ -35,19 +35,25 @@
     "test:e2e": "npm run test:e2e --workspaces --if-present"
   },
   "dependencies": {
+    "approve": "^0.0.12",
+    "scripts": "^0.1.0",
     "zod": "4.6.5"
   },
   "devDependencies": {
     "@types/node": "26.6.2",
     "@vitest/coverage-v8": "5.0.1",
     "husky": "9.1.7",
-    "oxlint": "1.83.0",
+    "oxlint": "1.85.0",
     "oxlint-tsgolint": "7.0.2002",
-    "prettier": "3.9.8",
+    "prettier": "3.9.9",
     "rimraf": "6.1.3",
     "typescript": "6.0.3",
     "vite-tsconfig-paths": "6.1.1",
     "vitest": "5.0.1"
   },
-  "allowScripts": {}
+  "allowScripts": {
+    "@scarf/scarf@1.4.0": true,
+    "bcrypt@6.0.0": true,
+    "esbuild@0.28.2": true
+  }
 }
