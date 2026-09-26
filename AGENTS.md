@@ -51,25 +51,17 @@ Definition of Done)       coverage floors)         or unified scripts)
 ├── packages/                       # Parent directory for workspace modules
 │   ├── api/                        # NestJS Backend Application
 │   │   ├── src/
-│   │   │   ├── app.controller.ts   # Root application controller
-│   │   │   ├── app.service.ts      # Root application service
 │   │   │   ├── app.module.ts       # Root application module
 │   │   │   ├── main.ts             # Application entry point
 │   │   │   ├── config/             # Configuration modules (database, validation, etc.)
 │   │   │   ├── migrations/         # TypeORM database migrations
 │   │   │   ├── modules/            # Feature modules (auth, users, tasks, etc.)
-│   │   │   │   ├── auth/           # Authentication module
+│   │   │   │   ├── auth/           # Authentication module (decorators, guards, strategies)
 │   │   │   │   ├── users/          # Users module
 │   │   │   │   ├── tasks/          # Tasks module
+│   │   │   │   ├── reference-data/ # Reference data module
 │   │   │   │   ├── core/           # Core utilities (logging, error handling, etc.)
 │   │   │   │   └── health/         # Health check module
-│   │   │   ├── common/             # Shared utilities, decorators, filters, guards, pipes, interceptors
-│   │   │   │   ├── decorators/     # Custom decorators
-│   │   │   │   ├── filters/        # Global exception filters
-│   │   │   │   ├── guards/         # Global guards
-│   │   │   │   ├── interceptors/   # Global interceptors
-│   │   │   │   ├── pipes/          # Custom validation pipes
-│   │   │   │   └── utils/          # Utility functions and helpers
 │   │   │   └── types/              # Shared TypeScript types and interfaces
 │   │   ├── test/                   # Integration and E2E tests
 │   │   ├── package.json
@@ -83,6 +75,7 @@ Definition of Done)       coverage floors)         or unified scripts)
 │       │   ├── stacks/             # Infrastructure stack definitions
 │       │   │   ├── network.stack.ts
 │       │   │   ├── database.stack.ts
+│       │   │   ├── ecr.stack.ts
 │       │   │   ├── compute.stack.ts
 │       │   │   └── scheduled-task.stack.ts
 │       │   └── utils/              # Configuration validation logic
@@ -94,15 +87,15 @@ Definition of Done)       coverage floors)         or unified scripts)
 ├── package.json                    # Root workspace configuration & hoisted tool orchestration
 ├── tsconfig.base.json              # Base TypeScript compiler configuration file
 ├── vitest.config.ts                # Base Vitest configuration file
-└── eslint.config.js                # Shared monorepo lint configuration
+└── .oxlintrc.json                  # Shared monorepo lint configuration (oxlint)
 
 ```
 
 ### Critical Architecture Rules
 
 - **No Relative Cross-Workspace Imports:** Never use relative paths to cross workspace boundaries (e.g., do not use `import ... from "../../../config"` inside `packages/api`). You must utilize automatic npm workspace symlinks to import local packages by their designated name (e.g., `import { Config } from "@nestjs-starter/shared"` if shared package exists).
-- **No Barrel Files:** Never create or maintain `index.ts` files for re-exporting within feature folders or lambda submodules. Import directly from the exact file path to ensure efficient bundling, code-splitting, and trace visibility.
-- **Co-location Principle:** Always place unit tests (`*.test.ts`, `*.test.tsx`) in the exact same directory as the module, function, handler, or component they are testing.
+- **No Barrel Files:** Never create or maintain `index.ts` files for re-exporting within feature folders. Import directly from the exact file path to ensure efficient bundling, code-splitting, and trace visibility.
+- **Co-location Principle:** Always place unit tests (`*.spec.ts`) in the exact same directory as the module, function, handler, or component they are testing.
 - **Centralized Base Configs:** Shared configurations (e.g., `tsconfig.base.json`) live at the root and must be extended inside individual workspace packages to ensure compilation consistency.
 - **Coding Principles:** All source code should follow the Single Responsibility Principle (SRP) and Don't Repeat Yourself (DRY). Do not add unnecessary or unrequested source members, You Aint Gonna Need It (YAGNI).
 
@@ -116,10 +109,10 @@ You are authorized to execute the following shell commands to validate your work
 | ------------------------ | ----------------------------------------------------------------------- | ----------------------------------------- |
 | **Install Dependencies** | `npm install`                                                           | Root project (updates lockfile)           |
 | **Scoped Installation**  | `npm install <package> -w <workspace-name>`                             | Installs dependency into specific package |
-| **Run All Unit Tests**   | `npm test --workspaces`                                                 | Comprehensive repo testing (Vitest)       |
+| **Run All Unit Tests**   | `npm test`                                                              | Comprehensive repo testing (Vitest)       |
 | **Run API Tests**        | `npm test -w packages/api` or `npm run test -w @nestjs-starter/api`     | Backend components, API validation        |
 | **Run Infra Tests**      | `npm test -w packages/infra` or `npm run test -w @nestjs-starter/infra` | Infrastructure stack validation           |
-| **Check Code Coverage**  | `npm run test:coverage --workspaces`                                    | Global test coverage review               |
+| **Check Code Coverage**  | `npm run test:coverage`                                                 | Global test coverage review               |
 | **Lint Entire Codebase** | `npm run lint`                                                          | Global linting analysis                   |
 | **Format Analysis**      | `npm run format:check`                                                  | Global Prettier/Formatter analysis        |
 | **Format Code**          | `npm run format`                                                        | Global Prettier/Formatter correction      |
@@ -169,7 +162,7 @@ You are authorized to execute the following shell commands to validate your work
 Your task cannot be marked as complete until it passes the following strict criteria:
 
 1. **Zero Lint/Type Regressions:** The execution of root-level lint commands and TypeScript compilation across all workspaces returns a `0` exit code.
-2. **Co-located Test Presence:** Every new or modified source file (`.ts`, `.tsx`) has a corresponding partner `.test.ts(x)` file sitting directly next to it in the exact same directory.
+2. **Co-located Test Presence:** Every new or modified source file (`.ts`, `.tsx`) has a corresponding partner `.spec.ts(x)` file sitting directly next to it in the exact same directory.
 3. **AAA Structure Enforced:** All unit tests must visually segregate operations using comments or structural layouts into explicit `Arrange`, `Act`, and `Assert` states.
 4. **Testing Standards:**
 

@@ -1,24 +1,30 @@
 # NestJS Starter Infrastructure
 
-This directory contains the AWS CDK infrastructure code for the NestJS Starter application. The infrastructure is defined using TypeScript and AWS CDK v2, providing Infrastructure as Code (IaC) for deploying the application to AWS.
+This package contains the AWS CDK infrastructure code for the NestJS Starter application. The infrastructure is defined using TypeScript and AWS CDK v2, providing Infrastructure as Code (IaC) for deploying the application to AWS.
+
+This is one package within an npm workspaces monorepo. See the root [README.md](../../README.md) and the [Monorepo Guide](../../docs/monorepo-guide.md) for details on the overall workspace structure.
 
 ## Directory Structure
 
 ```
-infrastructure/
-├── app.ts                      # CDK app entry point
-├── cdk.json                    # CDK configuration
-├── package.json                # NPM dependencies and scripts
-├── tsconfig.json               # TypeScript configuration
-├── .env.example                # Example environment variables
-├── .env                        # Environment variables (create from .env.example)
-├── README.md                   # This file
-└── stacks/                     # CDK stack definitions
-   ├── network.stack.ts         # Network infrastructure (VPC, Route 53, SSL)
-   ├── database.stack.ts        # Database infrastructure (Aurora Serverless v2)
-   ├── compute.stack.ts         # Compute infrastructure (ECS, ALB)
-   ├── ecr.stack.ts             # ECR repository stack (container registry)
-   └── scheduled-task.stack.ts  # Scheduled task infrastructure (optional)
+packages/infra/
+├── src/
+│   ├── app.ts                      # CDK app entry point
+│   ├── stacks/                     # CDK stack definitions
+│   │   ├── network.stack.ts        # Network infrastructure (VPC, Route 53, SSL)
+│   │   ├── database.stack.ts       # Database infrastructure (Aurora Serverless v2)
+│   │   ├── compute.stack.ts        # Compute infrastructure (ECS, ALB)
+│   │   ├── ecr.stack.ts            # ECR repository stack (container registry)
+│   │   └── scheduled-task.stack.ts # Scheduled task infrastructure (optional)
+│   └── utils/
+│       └── configuration.ts        # Environment variable validation
+├── cdk.json                        # CDK configuration
+├── package.json                    # NPM dependencies and scripts
+├── tsconfig.json                   # Extends the root tsconfig.base.json
+├── vitest.config.ts                 # Extends the root vitest.config.ts
+├── .env.example                    # Example environment variables
+├── .env                            # Environment variables (create from .env.example)
+└── README.md                       # This file
 ```
 
 ## Architecture Overview
@@ -74,7 +80,7 @@ Before deploying the infrastructure, ensure you have:
 
 ## Configuration
 
-1. Copy the example environment file:
+1. Copy the example environment file (from `packages/infra`):
 
    ```bash
    cp .env.example .env
@@ -125,6 +131,7 @@ The scheduled task service:
 ### 1. Install Dependencies
 
 ```bash
+# from the monorepo root
 npm install
 ```
 
@@ -137,7 +144,7 @@ npm run build
 ### 3. Bootstrap CDK (First Time Only)
 
 ```bash
-npm run bootstrap
+npm run cdk -- bootstrap
 ```
 
 ### 4. Synthesize CloudFormation Templates
@@ -161,9 +168,10 @@ Check the AWS Console for created resources and test the application URL.
 | Script                    | Description                                        |
 | ------------------------- | -------------------------------------------------- |
 | `npm run build`           | Compile TypeScript to JavaScript                   |
-| `npm run watch`           | Watch for changes and auto-compile                 |
-| `npm run test`            | Run Jest tests                                     |
-| `npm run bootstrap`       | Bootstrap CDK in your AWS account/region           |
+| `npm run clean`           | Remove build output and coverage reports           |
+| `npm run test`            | Run unit tests with Vitest                         |
+| `npm run test:watch`      | Run unit tests in watch mode                       |
+| `npm run test:coverage`   | Run unit tests with coverage                       |
 | `npm run synth`           | Synthesize CloudFormation templates                |
 | `npm run deploy <stack>`  | Deploy a stack                                     |
 | `npm run deploy:all`      | Deploy all stacks                                  |

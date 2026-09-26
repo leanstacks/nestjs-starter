@@ -31,8 +31,8 @@ Currently, the project uses GitHub Actions for CI/CD. Below is a detailed descri
 - **Main Steps:**
   1. Checkout repository (full history)
   2. Setup Node.js (from `.nvmrc`, with npm cache)
-  3. Install dependencies (`npm ci`)
-  4. Run ESLint and summarize results
+  3. Install dependencies (`npm ci`, installs all workspace packages)
+  4. Run lint analysis with oxlint and summarize results
   5. Check code formatting with Prettier
   6. Run tests with coverage and summarize results
   7. Build check
@@ -52,16 +52,15 @@ Currently, the project uses GitHub Actions for CI/CD. Below is a detailed descri
 - **Main Steps:**
   1. Checkout repository
   2. Setup Node.js (from `.nvmrc`, with npm cache)
-  3. Install dependencies (`npm ci`)
-  4. Lint code (`npm run lint`)
-  5. Check code formatting (`npm run format:check`)
-  6. Build application (`npm run build`)
-  7. Run tests with coverage (`npm run test:coverage`)
-  8. Install infrastructure dependencies (`npm ci` in `infrastructure/`)
-  9. Build infrastructure TypeScript code (`npm run build` in `infrastructure/`)
-  10. Create infrastructure `.env` file from GitHub variable (`CDK_ENV_DEV`)
-  11. Configure AWS credentials for synth (OIDC, role assumption)
-  12. Synthesize CDK stacks (`npm run synth` in `infrastructure/`)
+  3. Install dependencies (`npm ci`, installs all workspace packages in a single step)
+  4. Create infrastructure `.env` file from GitHub variable (`CDK_ENV_DEV`) in `packages/infra`
+  5. Lint code across all workspaces (`npm run lint`)
+  6. Check code formatting (`npm run format:check`)
+  7. Build application across all workspaces (`npm run build`)
+  8. Run tests with coverage across all workspaces (`npm run test:coverage`)
+  9. Configure AWS credentials for synth (OIDC, role assumption)
+  10. Synthesize CDK stacks for the infra workspace only (`npm run synth --workspace packages/infra`)
+  11. Clean up sensitive files (`.env`, build output, `cdk.out`)
 - **Importance:** Ensures that all code merged into `main` passes linting, formatting, builds successfully, is covered by tests, and that the AWS CDK infrastructure code is valid and synthesizes successfully. This prevents broken or low-quality code and infrastructure from being merged and keeps the main branch stable.
 
 ### Deploy to DEV Workflow (`deploy-dev.yml`)
@@ -205,8 +204,9 @@ Currently, the project uses GitHub Actions for CI/CD. Below is a detailed descri
 
 - [NestJS Documentation](https://docs.nestjs.com/)
 - [GitHub Actions Documentation](https://docs.github.com/en/actions)
-- [Jest Documentation](https://jestjs.io/)
-- [ESLint Documentation](https://eslint.org/)
+- [Vitest Documentation](https://vitest.dev/)
+- [oxlint Documentation](https://oxc.rs/docs/guide/usage/linter.html)
+- [Monorepo Guide](./monorepo-guide.md)
 
 ---
 
