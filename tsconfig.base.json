@@ -1,0 +1,36 @@
+/**
+ * Base TypeScript configuration for the project.
+ */
+{
+  "compilerOptions": {
+    /* Language & Environment */
+    "target": "ES2023",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+
+    /* Module Resolution */
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "types": ["vitest/globals", "node"],
+
+    /* Output */
+    // "rootDir": ".",
+    // "outDir": "./dist",
+    "declaration": true,
+    "removeComments": true,
+    "sourceMap": true,
+
+    /* Strictness & Safety */
+    "strict": true,
+    "strictPropertyInitialization": false,
+
+    /* Misc */
+    "resolvePackageJsonExports": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "allowSyntheticDefaultImports": true,
+    "incremental": true,
+    "skipLibCheck": true
+  },
+  "exclude": ["node_modules", "dist", "coverage"]
+}

@@ -87,10 +87,10 @@ This starter project implements production-ready NestJS patterns and features. U
 
 ### Code Quality & Testing
 
-- **Unit Tests** - Comprehensive test coverage using Jest
+- **Unit Tests** - Comprehensive test coverage using Vitest
 - **End-to-End Tests** - Integration tests for API endpoints
 - **Pre-commit Hooks** - Husky for automated linting and formatting
-- **ESLint** - Code quality enforcement with NestJS-specific rules
+- **oxlint** - Fast, type-aware code quality enforcement
 - **Prettier** - Consistent code formatting
 - **Coverage Reports** - Test coverage tracking and reporting
 
@@ -104,31 +104,41 @@ npm install
 
 2. **Configure environment variables:**
 
-- Copy `.env.example` to `.env` and adjust values as needed.
+- Copy `packages/api/.env.example` to `packages/api/.env` and adjust values as needed.
 - See the [Configuration Guide](docs/configuration-guide.md) for details.
 
 3. **Run the application:**
 
 ```bash
-npm run start
+npm run start -w packages/api
 ```
+
+## Monorepo Structure
+
+This project is organized as an **npm workspaces monorepo** with two packages:
+
+- `packages/api` - The NestJS web application
+- `packages/infra` - The AWS CDK infrastructure as code
+
+Common tooling (linting, formatting, base TypeScript config, base Vitest config) is centralized at the project root and extended by each package. See the [Monorepo Guide](docs/monorepo-guide.md) for details on the workspace conventions.
 
 ## Available Scripts
 
-| Script                | Description                                  |
-| --------------------- | -------------------------------------------- |
-| npm run build         | Compile the TypeScript source code           |
-| npm run clean         | Remove build output and temporary files      |
-| npm run lint          | Run ESLint to check code quality             |
-| npm run lint:fix      | Fix code quality issues with ESLint          |
-| npm run format        | Format code using Prettier                   |
-| npm run format:check  | Check code formatting without changing files |
-| npm run start         | Start the application (development)          |
-| npm run start:dev     | Start in watch mode                          |
-| npm run start:prod    | Start in production mode                     |
-| npm run test          | Run unit tests                               |
-| npm run test:e2e      | Run end-to-end tests                         |
-| npm run test:coverage | Run test coverage                            |
+Run the following scripts from the project root. Most delegate to each workspace package via `--workspaces --if-present`. Target a single package with `-w packages/api` or `-w packages/infra` (e.g., `npm run start -w packages/api`).
+
+| Script                | Description                                        |
+| --------------------- | -------------------------------------------------- |
+| npm run build         | Compile the TypeScript source code in all packages |
+| npm run clean         | Remove build output and temporary files            |
+| npm run lint          | Run oxlint to check code quality                   |
+| npm run lint:fix      | Fix code quality issues with oxlint                |
+| npm run format        | Format code using Prettier                         |
+| npm run format:check  | Check code formatting without changing files       |
+| npm run test          | Run unit tests in all packages                     |
+| npm run test:e2e      | Run end-to-end tests (API package)                 |
+| npm run test:coverage | Run test coverage in all packages                  |
+
+Package-specific scripts, such as `start`, `start:dev`, `start:prod`, and CDK deployment commands, are defined in each package's `package.json`. See [packages/api/README.md](packages/api/README.md) and [packages/infra/README.md](packages/infra/README.md).
 
 ## Project Structure
 
@@ -136,41 +146,33 @@ npm run start
 ├── .github/                             # GitHub workflows and configuration
 |
 ├── docs/                                # Project documentation
-|  ├── configuration-guide.md            # Configuration guide
-|  └── devops-guide.md                   # DevOps guide
 |
-├── infrastructure/                      # AWS CDK Infrastructure as Code
-│   ├── stacks/                          # AWS CDK stacks
-|   └── app.ts                           # AWS CDK application
+├── packages/
+│   ├── api/                             # NestJS web application
+│   │   ├── src/                        # Application source code
+│   │   ├── test/                       # End-to-end tests
+│   │   ├── .env.example                # Example environment variables
+│   │   ├── package.json                # Package metadata and scripts
+│   │   ├── tsconfig.json               # Extends the root tsconfig.base.json
+│   │   ├── vitest.config.ts            # Extends the root vitest.config.ts
+│   │   └── README.md                   # API package documentation
+│   └── infra/                           # AWS CDK Infrastructure as Code
+│       ├── src/                        # CDK app and stack definitions
+│       ├── .env.example                # Example environment variables
+│       ├── package.json                # Package metadata and scripts
+│       ├── tsconfig.json               # Extends the root tsconfig.base.json
+│       ├── vitest.config.ts            # Extends the root vitest.config.ts
+│       └── README.md                   # Infra package documentation
 |
-├── src/                                 # Main application source code
-│   ├── app.module.ts                    # App module
-│   ├── main.ts                          # Application entry point
-│   ├── modules/
-│   │   └── tasks/                       # Example feature module
-│   │       ├── tasks.module.ts          # Tasks module definition
-│   │       ├── tasks.controller.ts      # Tasks controller
-│   │       ├── tasks.controller.spec.ts # Tasks controller unit tests
-│   │       ├── tasks.service.ts         # Tasks service
-│   │       ├── tasks.service.spec.ts    # Tasks service unit tests
-│   │       ├── dto/                     # DTOs for tasks
-│   │       └── entities/                # Entities for tasks
-│   └── config/                          # Configuration-related code
-│       └── configuration.ts             # Configuration loader
-├── test/                                # End-to-end tests
-│   ├── tasks.e2e-spec.ts                # E2E test spec
-│   └── jest-e2e.json                    # Jest E2E config
-|
-├── .env.example                         # Example environment variables
-├── package.json                         # Project metadata and scripts
-├── tsconfig.json                        # TypeScript configuration
-├── nest-cli.json                        # NestJS CLI configuration
+├── package.json                         # Root workspace configuration & scripts
+├── tsconfig.base.json                   # Base TypeScript configuration
+├── vitest.config.ts                     # Base Vitest configuration
 └── README.md                            # Project documentation
 ```
 
 ## Documentation Hub
 
-For all guides and references—including configuration, Docker, DevOps, and API documentation—see the [Documentation Table of Contents](docs/README.md).
+For all guides and references—including configuration, the monorepo structure, Docker, DevOps, and API documentation—see the [Documentation Table of Contents](docs/README.md).
 
 ## Additional Information
 

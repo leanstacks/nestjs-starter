@@ -1,3 +1,16 @@
+# ==================================================================================================
+# Workflow Name: Continuous Integration
+# Description: Continuous Integration workflow for building, linting, and
+#              testing the project, as well as synthesizing infrastructure stacks.
+#
+# Maintainer: NestJS API Team
+# Downstreams: None
+#
+# Security Considerations: Ensure that sensitive information such as
+#                          AWS credentials and environment variables are
+#                          handled securely and cleaned up after the workflow completes.
+# References: See DevOps Guide at docs/devops-guide.md
+# ==================================================================================================
 name: CI
 
 on:
@@ -20,11 +33,12 @@ jobs:
       id-token: write
 
     steps:
+      # --- Setup ---
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: 'npm'
@@ -32,6 +46,12 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Create infrastructure .env file
+        working-directory: ./packages/infra
+        run: |
+          echo "${{ vars.CDK_ENV_DEV }}" > .env
+
+      # --- Project Checks ---
       - name: Lint code
         run: npm run lint
 
@@ -44,24 +64,7 @@ jobs:
       - name: Run tests with coverage
         run: npm run test:coverage
 
-      # --- Infrastructure CDK Checks ---
-      - name: Install infrastructure dependencies
-        working-directory: ./infrastructure
-        run: npm ci
-
-      - name: Build infrastructure
-        working-directory: ./infrastructure
-        run: npm run build
-
-      - name: Run infrastructure tests with coverage
-        working-directory: ./infrastructure
-        run: npm run test:coverage
-
-      - name: Create infrastructure .env file
-        working-directory: ./infrastructure
-        run: |
-          echo "${{ vars.CDK_ENV_DEV }}" > .env
-
+      # --- Infrastructure Package Checks ---
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v6
         with:
@@ -70,15 +73,16 @@ jobs:
           aws-region: ${{ vars.AWS_REGION }}
 
       - name: Synthesize CDK stacks
-        working-directory: ./infrastructure
-        run: npm run synth
+        run: npm run synth --workspace packages/infra
 
-      # Final Step: Clean up sensitive infrastructure files
+      # --- Final Step: Clean up sensitive files ---
       - name: Clean up sensitive files
         if: always()
-        working-directory: ./infrastructure
         run: |
           echo "🧹 Cleaning up sensitive files..."
-          rm -f .env
-          rm -rf cdk.out
+          rm -f packages/api/.env
+          rm -rf packages/api/dist
+          rm -f packages/infra/.env
+          rm -rf packages/infra/dist
+          rm -rf packages/infra/cdk.out
           echo "✅ Sensitive files cleaned up"

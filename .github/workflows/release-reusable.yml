@@ -1,3 +1,15 @@
+# ==================================================================================================
+# Workflow Name: Release (Reusable)
+# Description: A reusable workflow for releasing the project to different environments.
+#
+# Maintainer: NestJS API Team
+# Downstreams: None
+#
+# Security Considerations: Ensure that sensitive information such as
+#                          AWS credentials and environment variables are
+#                          handled securely and cleaned up after the workflow completes.
+# References: See DevOps Guide at docs/devops-guide.md
+# ==================================================================================================
 name: Release (Reusable)
 
 on:
@@ -35,18 +47,16 @@ jobs:
       id-token: write
 
     steps:
-      # Step 1: Checkout repository
+      # --- Setup ---
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
-      # Step 2: Setup Node.js using .nvmrc
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: 'npm'
 
-      # Step 3: Configure AWS credentials
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v6
         with:
@@ -54,58 +64,46 @@ jobs:
           role-session-name: release-nestjs-starter-${{ inputs.environment }}
           aws-region: ${{ inputs.aws_region }}
 
-      # Step 4: Install infrastructure dependencies
-      - name: Install infrastructure dependencies
-        working-directory: ./infrastructure
+      - name: Install dependencies
         run: npm ci
 
-      # Step 5: Create infrastructure .env file
       - name: Create infrastructure .env file
-        working-directory: ./infrastructure
+        working-directory: ./packages/infra
         run: |
           echo "${{ inputs.cdk_env_content }}" > .env
-          echo "✅ Infrastructure .env file created"
 
-      # Step 6: Build infrastructure
+      # --- Build ---
       - name: Build infrastructure
-        working-directory: ./infrastructure
         run: npm run build
 
-      # Step 7: Synthesize CDK stacks
       - name: Synthesize CDK stacks
-        working-directory: ./infrastructure
-        run: npm run synth
+        run: npm run synth --workspace packages/infra
 
-      # Step 8: Deploy infrastructure stacks
+      # --- Deploy ---
       - name: Deploy Network stack
-        working-directory: ./infrastructure
         run: |
           echo "🚀 Deploying Network stack..."
-          npx cdk deploy nestjs-starter-network-${{ inputs.environment }} --require-approval never
+          npm run deploy --workspace packages/infra -- nestjs-starter-network-${{ inputs.environment }} --require-approval never
           echo "✅ Network stack deployed successfully"
 
       - name: Deploy Database stack
-        working-directory: ./infrastructure
         run: |
           echo "🚀 Deploying Database stack..."
-          npx cdk deploy nestjs-starter-database-${{ inputs.environment }} --require-approval never
+          npm run deploy --workspace packages/infra -- nestjs-starter-database-${{ inputs.environment }} --require-approval never
           echo "✅ Database stack deployed successfully"
 
       - name: Deploy Compute stack
-        working-directory: ./infrastructure
         run: |
           echo "🚀 Deploying Compute stack..."
-          npx cdk deploy nestjs-starter-compute-${{ inputs.environment }} --require-approval never --context appVersion=${{ inputs.image_tag }}
+          npm run deploy --workspace packages/infra -- nestjs-starter-compute-${{ inputs.environment }} --require-approval never --context appVersion=${{ inputs.image_tag }}
           echo "✅ Compute stack deployed successfully"
 
       - name: Deploy Scheduled Task stack
-        working-directory: ./infrastructure
         run: |
           echo "🚀 Deploying Scheduled Task stack..."
-          npx cdk deploy nestjs-starter-scheduled-task-${{ inputs.environment }} --require-approval never --context appVersion=${{ inputs.image_tag }}
+          npm run deploy --workspace packages/infra -- nestjs-starter-scheduled-task-${{ inputs.environment }} --require-approval never --context appVersion=${{ inputs.image_tag }}
           echo "✅ Scheduled Task stack deployed successfully"
 
-      # Step 9: Update ECS services with specified image tag
       - name: Update ECS API service
         run: |
           CLUSTER_NAME="nestjs-starter-${{ inputs.environment }}"
@@ -146,11 +144,14 @@ jobs:
             echo "⚠️ Scheduled task service not found or not active, skipping"
           fi
 
-      # Step 10: Cleanup
-      - name: Cleanup sensitive files
+      # --- Final Step: Clean up sensitive files ---
+      - name: Clean up sensitive files
         if: always()
-        working-directory: ./infrastructure
         run: |
-          rm -f .env
-          rm -rf cdk.out
-          echo "✅ Cleaned up sensitive files"
+          echo "🧹 Cleaning up sensitive files..."
+          rm -f packages/api/.env
+          rm -rf packages/api/dist
+          rm -f packages/infra/.env
+          rm -rf packages/infra/dist
+          rm -rf packages/infra/cdk.out
+          echo "✅ Sensitive files cleaned up"

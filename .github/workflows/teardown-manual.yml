@@ -1,4 +1,16 @@
-name: Teardown Infrastructure
+# ==================================================================================================
+# Workflow Name: Teardown (Manual)
+# Description: A workflow for manually tearing down the infrastructure in different environments.
+#
+# Maintainer: NestJS API Team
+# Downstreams: None
+#
+# Security Considerations: Ensure that sensitive information such as
+#                          AWS credentials and environment variables are
+#                          handled securely and cleaned up after the workflow completes.
+# References: See DevOps Guide at docs/devops-guide.md
+# ==================================================================================================
+name: Teardown (Manual)
 
 on:
   workflow_dispatch:
@@ -27,18 +39,16 @@ jobs:
       id-token: write
 
     steps:
-      # Step 1: Checkout repository
+      # --- Setup ---
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
-      # Step 2: Setup Node.js using .nvmrc
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: 'npm'
 
-      # Step 3: Configure AWS credentials
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v6
         with:
@@ -46,27 +56,22 @@ jobs:
           role-session-name: teardown-nestjs-starter-${{ inputs.environment }}
           aws-region: ${{ vars.AWS_REGION }}
 
-      # Step 4: Install infrastructure dependencies
-      - name: Install infrastructure dependencies
-        working-directory: ./infrastructure
+      - name: Install dependencies
         run: npm ci
 
-      # Step 5: Create infrastructure .env file
       - name: Create infrastructure .env file
-        working-directory: ./infrastructure
+        working-directory: ./packages/infra
         run: |
           echo "${{ inputs.environment == 'dev' && vars.CDK_ENV_DEV || inputs.environment == 'qa' && vars.CDK_ENV_QA || vars.CDK_ENV_PRD }}" > .env
           echo "✅ Infrastructure .env file created"
 
-      # Step 6: Synthesize CDK stacks
+      # --- Build ---
       - name: Synthesize CDK stacks
-        working-directory: ./infrastructure
-        run: npm run synth
+        run: npm run synth --workspace packages/infra
 
-      # Step 7: Destroy all stacks
+      # --- Teardown ---
       - name: Destroy all stacks
-        working-directory: ./infrastructure
         run: |
           echo "🚀 Destroying all stacks..."
-          npx cdk destroy --all --force
+          npm run destroy --workspace packages/infra -- --all --force
           echo "✅ All stacks destroyed successfully"
