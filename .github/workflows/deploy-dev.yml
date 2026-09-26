@@ -1,3 +1,16 @@
+# ==================================================================================================
+# Workflow Name: Deploy to DEV
+# Description: Deployment workflow for deploying the project to the DEV environment, including
+#              building, testing, and synthesizing infrastructure stacks.
+#
+# Maintainer: NestJS API Team
+# Downstreams: None
+#
+# Security Considerations: Ensure that sensitive information such as
+#                          AWS credentials and environment variables are
+#                          handled securely and cleaned up after the workflow completes.
+# References: See DevOps Guide at docs/devops-guide.md
+# ==================================================================================================
 name: Deploy to DEV
 
 on:
@@ -27,18 +40,16 @@ jobs:
       image_tag: ${{ steps.semver.outputs.version }}
 
     steps:
-      # Step 1: Checkout repository
+      # --- Setup ---
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
-      # Step 2: Setup Node.js using .nvmrc
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: 'npm'
 
-      # Step 3: Configure AWS credentials for role and region
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v6
         with:
@@ -46,69 +57,50 @@ jobs:
           role-session-name: deploy-nestjs-starter-dev
           aws-region: ${{ vars.AWS_REGION }}
 
-      # Step 4: Install the app dependencies
-      - name: Install app dependencies
+      - name: Install dependencies
         run: npm ci
 
-      # Step 5: Build the app
+      - name: Create infrastructure .env file
+        working-directory: ./packages/infra
+        run: |
+          echo "${{ vars.CDK_ENV_DEV }}" > .env
+
+      # --- Project Checks ---
       - name: Build application
         run: npm run build
 
-      # Step 6: Run the app unit tests
       - name: Run unit tests
         run: npm run test
 
-      # Step 7: Install the infrastructure dependencies
-      - name: Install infrastructure dependencies
-        working-directory: ./infrastructure
-        run: npm ci
-
-      # Step 8: Create the infrastructure .env file from CDK_ENV_DEV variable
-      - name: Create infrastructure .env file
-        working-directory: ./infrastructure
-        run: |
-          echo "${{ vars.CDK_ENV_DEV }}" > .env
-          echo "✅ Infrastructure .env file created"
-
-      # Step 9: Build the infrastructure
-      - name: Build infrastructure
-        working-directory: ./infrastructure
-        run: npm run build
-
-      # Step 10: Bootstrap the CDK (if needed)
+      # --- Deploy ---
       - name: Bootstrap CDK
-        working-directory: ./infrastructure
         run: |
           if [ "${{ inputs.force_bootstrap }}" = "true" ]; then
             echo "🔄 Force bootstrapping CDK..."
-            npm run bootstrap
+            npm run cdk bootstrap --workspace packages/infra
           else
             echo "⚡ Checking if CDK bootstrap is needed..."
             # Try to describe the bootstrap stack to see if it exists
             if ! aws cloudformation describe-stacks --stack-name CDKToolkit --region ${{ vars.AWS_REGION }} >/dev/null 2>&1; then
               echo "🚀 CDK not bootstrapped, bootstrapping now..."
-              npm run bootstrap
+              npm run cdk bootstrap --workspace packages/infra
             else
               echo "✅ CDK already bootstrapped, skipping..."
             fi
           fi
 
-      # Step 11: Synthesize the CDK stacks
       - name: Synthesize CDK stacks
-        working-directory: ./infrastructure
-        run: npm run synth
+        run: npm run synth --workspace packages/infra
 
-      # Step 12: Deploy the ECR CDK stack
       - name: Deploy ECR stack
-        working-directory: ./infrastructure
         run: |
           echo "🚀 Deploying ECR stack..."
-          npx cdk deploy nestjs-starter-ecr-dev --require-approval never
+          npm run cdk deploy --workspace packages/infra -- nestjs-starter-ecr-dev --require-approval never
           echo "✅ ECR stack deployed successfully"
 
-      # Step 13: Generate semver tag
       - name: Generate semver tag
         id: semver
+        working-directory: ./packages/infra
         run: |
           # Get version from package.json
           PKG_VERSION=$(node -p "require('./package.json').version")
@@ -128,7 +120,6 @@ jobs:
           echo "Generated semver: ${SEMVER}"
           echo "version=${SEMVER}" >> $GITHUB_OUTPUT
 
-      # Step 14: Build the app Docker image and publish it to ECR
       - name: Build and push Docker image to ECR
         run: |
           # Get ECR repository URI
@@ -141,7 +132,7 @@ jobs:
           # Build and tag the image with both latest and semver tags
           SEMVER_TAG="${{ steps.semver.outputs.version }}"
           echo "🔨 Building Docker image..."
-          docker build -t $ECR_REPOSITORY_URI:latest -t $ECR_REPOSITORY_URI:$SEMVER_TAG .
+          docker build --build-arg WORKSPACE_DIR=packages/api -t $ECR_REPOSITORY_URI:latest -t $ECR_REPOSITORY_URI:$SEMVER_TAG .
 
           # Push both tags
           echo "📤 Pushing Docker image with tag: latest"
@@ -154,14 +145,16 @@ jobs:
           echo "  - $ECR_REPOSITORY_URI:latest"
           echo "  - $ECR_REPOSITORY_URI:$SEMVER_TAG"
 
-      # Step 15: Clean up sensitive infrastructure files
+      # --- Final Step: Clean up sensitive files ---
       - name: Clean up sensitive files
         if: always()
-        working-directory: ./infrastructure
         run: |
           echo "🧹 Cleaning up sensitive files..."
-          rm -f .env
-          rm -rf cdk.out
+          rm -f packages/api/.env
+          rm -rf packages/api/dist
+          rm -f packages/infra/.env
+          rm -rf packages/infra/dist
+          rm -rf packages/infra/cdk.out
           echo "✅ Sensitive files cleaned up"
 
   deploy:

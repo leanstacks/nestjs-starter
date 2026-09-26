@@ -1,3 +1,15 @@
+# ==================================================================================================
+# Workflow Name: Release (Manual)
+# Description: A workflow for manually releasing the project to different environments.
+#
+# Maintainer: NestJS API Team
+# Downstreams: None
+#
+# Security Considerations: Ensure that sensitive information such as
+#                          AWS credentials and environment variables are
+#                          handled securely and cleaned up after the workflow completes.
+# References: See DevOps Guide at docs/devops-guide.md
+# ==================================================================================================
 name: Release (Manual)
 
 on:
