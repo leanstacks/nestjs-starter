@@ -81,7 +81,6 @@ jobs:
 
       # --- Deploy ---
       - name: Deploy Network stack
-        working-directory: ./infrastructure
         run: |
           echo "🚀 Deploying Network stack..."
           npm run deploy --workspace packages/infra -- nestjs-starter-network-${{ inputs.environment }} --require-approval never
@@ -94,14 +93,12 @@ jobs:
           echo "✅ Database stack deployed successfully"
 
       - name: Deploy Compute stack
-        working-directory: ./infrastructure
         run: |
           echo "🚀 Deploying Compute stack..."
           npm run deploy --workspace packages/infra -- nestjs-starter-compute-${{ inputs.environment }} --require-approval never --context appVersion=${{ inputs.image_tag }}
           echo "✅ Compute stack deployed successfully"
 
       - name: Deploy Scheduled Task stack
-        working-directory: ./infrastructure
         run: |
           echo "🚀 Deploying Scheduled Task stack..."
           npm run deploy --workspace packages/infra -- nestjs-starter-scheduled-task-${{ inputs.environment }} --require-approval never --context appVersion=${{ inputs.image_tag }}
