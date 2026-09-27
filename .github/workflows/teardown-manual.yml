@@ -66,6 +66,9 @@ jobs:
           echo "✅ Infrastructure .env file created"
 
       # --- Build ---
+      - name: Build application
+        run: npm run build
+
       - name: Synthesize CDK stacks
         run: npm run synth --workspace packages/infra
 
