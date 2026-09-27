@@ -1,6 +1,6 @@
 {
   "name": "nestjs-starter",
-  "version": "1.4.0-alpha.1",
+  "version": "1.4.0",
   "description": "A starter project for NestJS applications using a curated technology stack for optimal performance, reliability, and maintainability.",
   "keywords": [
     "nestjs",
@@ -35,8 +35,6 @@
     "test:e2e": "npm run test:e2e --workspaces --if-present"
   },
   "dependencies": {
-    "approve": "^0.0.12",
-    "scripts": "^0.1.0",
     "zod": "4.6.5"
   },
   "devDependencies": {
