@@ -18,6 +18,8 @@ Welcome to the documentation for the NestJS Starter project. This directory cont
   - Building and running containers
 - [Infrastructure Guide](./infrastructure-guide.md)
   - AWS CDK, cloud resources, and infrastructure as code
+- [Monorepo Guide](./monorepo-guide.md)
+  - npm workspaces, TypeScript, and Vitest configuration conventions
 
 ---
 

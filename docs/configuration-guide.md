@@ -2,18 +2,20 @@
 
 This document explains how to configure the application. Proper configuration ensures the application runs as expected in different environments, for example development, quality, staging, or production.
 
+> **Note:** These environment variables apply to the API application in `packages/api`. The infrastructure package (`packages/infra`) uses a separate set of `CDK_`-prefixed environment variables documented in the [Infrastructure Guide](./infrastructure-guide.md).
+
 ## Getting Started
 
 1. **Copy the Example Environment File:**
-   - Duplicate `.env.example` as `.env` in the project root.
+   - Duplicate `packages/api/.env.example` as `packages/api/.env`.
    - Adjust the values as needed for your local setup.
 
 2. **Edit Environment Variables:**
-   - Open `.env` and update variables to match your requirements.
+   - Open `packages/api/.env` and update variables to match your requirements.
    - The application loads these variables at startup.
 
 3. **Run the Application:**
-   - Use `npm run start` or your preferred command to launch the app.
+   - Use `npm run start -w packages/api` (or `npm run start` from within `packages/api`) to launch the app.
 
 ## Environment Variables
 
@@ -43,7 +45,7 @@ The following environment variables are available for configuration:
 NestJS applications resolve environment variables using the following precedence order:
 
 1. **Process Environment (`process.env`)**: Values set in the running environment (e.g., via shell, Docker, CI/CD) override all others.
-2. **`.env` File**: Variables defined in the `.env` file in the project root are loaded at startup if not already set in `process.env`.
+2. **`.env` File**: Variables defined in the `.env` file in `packages/api` are loaded at startup if not already set in `process.env`.
 3. **Default Values in Code**: If a variable is not set in either `process.env` or `.env`, the application may fall back to defaults defined in the code (e.g., in configuration service or module).
 
 **Note:**

@@ -1,0 +1,15 @@
+/**
+ * TypeScript build configuration for the Infrastructure package.
+ */
+{
+  /* Extend the TypeScript configuration for the Infrastructure package */
+  "extends": "./tsconfig.json",
+
+  /* Compiler options for the Infrastructure build */
+  "compilerOptions": {
+    /* Output */
+    "rootDir": "./src"
+  },
+  "include": ["src"],
+  "exclude": ["**/*.test.ts", "**/*.spec.ts"]
+}

@@ -1,3 +1,15 @@
+# ==================================================================================================
+# Workflow Name: Tag ECR Image
+# Description: A workflow for tagging ECR images in different environments.
+#
+# Maintainer: NestJS API Team
+# Downstreams: None
+#
+# Security Considerations: Ensure that sensitive information such as
+#                          AWS credentials and environment variables are
+#                          handled securely and cleaned up after the workflow completes.
+# References: See DevOps Guide at docs/devops-guide.md
+# ==================================================================================================
 name: Tag ECR Image
 
 on:
@@ -35,7 +47,7 @@ jobs:
       id-token: write
 
     steps:
-      # Step 1: Configure AWS credentials
+      # -- Setup ---
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v6
         with:
@@ -43,7 +55,7 @@ jobs:
           role-session-name: tag-ecr-image-${{ inputs.environment }}
           aws-region: ${{ vars.AWS_REGION }}
 
-      # Step 2: Tag the ECR image
+      # -- Tag the ECR image ---
       - name: Tag ECR image
         run: |
           REPOSITORY_NAME="nestjs-starter"
@@ -86,7 +98,6 @@ jobs:
           echo "  New tag: ${{ inputs.new_tag }}"
           echo "  Image: $ECR_REPOSITORY_URI:${{ inputs.new_tag }}"
 
-      # Step 3: Verify the new tag
       - name: Verify new tag
         run: |
           REPOSITORY_NAME="nestjs-starter"

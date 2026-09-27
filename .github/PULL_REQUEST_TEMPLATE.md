@@ -28,8 +28,8 @@ _Pull request authors must complete the following tasks before marking the PR as
 
 _Describe the process to test the changes in this pull request._
 
-1. Go to [...]
-2. Click on [...]
+1. Open Postman.
+2. Run the [...] endpoint with payload [...]
 3. Verify that [...]
 
 ### :link: Additional Information

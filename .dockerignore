@@ -71,9 +71,9 @@ Dockerfile
 
 # Linting and formatting
 
-.eslintrc.js
+.oxlintrc.json
 .prettierrc
-eslint.config.mjs
+.editorconfig
 
 # Nest CLI configuration
 

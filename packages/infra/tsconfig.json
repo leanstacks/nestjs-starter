@@ -1,0 +1,17 @@
+/**
+ * TypeScript configuration for the infrastructure package.
+ */
+{
+  /* Extend the base TypeScript configuration */
+  "extends": "../../tsconfig.base.json",
+
+  /* Compiler options for the infrastructure package */
+  "compilerOptions": {
+    /* Output */
+    "outDir": "./dist",
+    "rootDir": ".",
+
+    /* Misc */
+    "incremental": false
+  }
+}
