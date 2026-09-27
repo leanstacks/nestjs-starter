@@ -58,9 +58,11 @@ Currently, the project uses GitHub Actions for CI/CD. Below is a detailed descri
   6. Check code formatting (`npm run format:check`)
   7. Build application across all workspaces (`npm run build`)
   8. Run tests with coverage across all workspaces (`npm run test:coverage`)
-  9. Configure AWS credentials for synth (OIDC, role assumption)
-  10. Synthesize CDK stacks for the infra workspace only (`npm run synth --workspace packages/infra`)
-  11. Clean up sensitive files (`.env`, build output, `cdk.out`)
+  9. Setup Docker environment
+  10. Build Docker image (for the default `WORKSPACE_DIR`)
+  11. Configure AWS credentials for synth (OIDC, role assumption)
+  12. Synthesize CDK stacks for the infra workspace only (`npm run synth --workspace packages/infra`)
+  13. Clean up sensitive files (`.env`, build output, `cdk.out`)
 - **Importance:** Ensures that all code merged into `main` passes linting, formatting, builds successfully, is covered by tests, and that the AWS CDK infrastructure code is valid and synthesizes successfully. This prevents broken or low-quality code and infrastructure from being merged and keeps the main branch stable.
 
 ### Deploy to DEV Workflow (`deploy-dev.yml`)
