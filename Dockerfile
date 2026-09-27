@@ -6,8 +6,11 @@ FROM node:24.21.0-alpine AS builder
 # Set the working directory inside the container
 WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json to the working directory
+# Copy base package.json and package-lock.json to the working directory
 COPY package*.json ./
+# Copy workspace package.json files so npm ci can resolve and install workspace dependencies
+COPY packages/api/package*.json ./packages/api/
+COPY packages/infra/package*.json ./packages/infra/
 
 # Install all dependencies (including devDependencies for building)
 RUN npm ci
