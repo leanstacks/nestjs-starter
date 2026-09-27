@@ -5,6 +5,7 @@ This guide provides comprehensive instructions for building, running, and managi
 ## Table of Contents
 
 - [Prerequisites](#prerequisites)
+- [Monorepo Build Context](#monorepo-build-context)
 - [Building the Docker Image](#building-the-docker-image)
 - [Running the Container](#running-the-container)
 - [Environment Variables](#environment-variables)
@@ -27,16 +28,31 @@ docker --version
 docker-compose --version
 ```
 
+## Monorepo Build Context
+
+This project is an npm workspaces monorepo (see the [Monorepo Guide](./monorepo-guide.md)), and the root `Dockerfile` is a multi-stage build designed to package a single workspace package into a runtime image.
+
+- **Build context is the repository root.** Always run `docker build` from the project root, not from within `packages/api`, since the Dockerfile copies the whole workspace (`COPY . .`) and runs `npm ci`/`npm run build` across all packages before selecting one for the runtime stage.
+- **`WORKSPACE_DIR` build argument** selects which package's build output is copied into the final runtime image. It defaults to `packages/api` and is used to compute the package's `package.json` path (`$WORKSPACE_DIR/package.json`), compiled output (`$WORKSPACE_DIR/dist`), and the container's start command (`node $WORKSPACE_DIR/dist/main`).
+
 ## Building the Docker Image
 
 The application uses a multi-stage Dockerfile for optimized production builds.
 
 ### Basic Build
 
-Build the Docker image with a tag:
+Build the Docker image with a tag (run from the repository root):
 
 ```bash
 docker build -t nestjs-starter .
+```
+
+### Build with a Custom WORKSPACE_DIR
+
+Override the `WORKSPACE_DIR` build argument to package a different workspace (defaults to `packages/api`):
+
+```bash
+docker build --build-arg WORKSPACE_DIR=packages/api -t nestjs-starter .
 ```
 
 ### Build with Custom Tag
@@ -70,10 +86,10 @@ docker build --platform linux/amd64 -t nestjs-starter:amd64 .
 
 ### Basic Run
 
-Start the container and map port 3000:
+Start the container, map port 3000, and set `APP_PORT` so the application listens on the exposed port (see [Configuration Guide](./configuration-guide.md); the application defaults to port 3001 if `APP_PORT` is not set):
 
 ```bash
-docker run -p 3000:3000 nestjs-starter
+docker run -p 3000:3000 -e APP_PORT=3000 nestjs-starter
 ```
 
 ### Run in Detached Mode
@@ -81,7 +97,7 @@ docker run -p 3000:3000 nestjs-starter
 Run the container in the background:
 
 ```bash
-docker run -d -p 3000:3000 --name nestjs-app nestjs-starter
+docker run -d -p 3000:3000 -e APP_PORT=3000 --name nestjs-app nestjs-starter
 ```
 
 ### Run with Custom Port Mapping
@@ -89,7 +105,7 @@ docker run -d -p 3000:3000 --name nestjs-app nestjs-starter
 Map to a different host port:
 
 ```bash
-docker run -d -p 8080:3000 --name nestjs-app nestjs-starter
+docker run -d -p 8080:3000 -e APP_PORT=3000 --name nestjs-app nestjs-starter
 ```
 
 Access the application at `http://localhost:8080`
@@ -117,20 +133,28 @@ docker run -p 3000:3000 -e NODE_ENV=production nestjs-starter
 ```bash
 docker run -p 3000:3000 \
   -e NODE_ENV=production \
-  -e PORT=3000 \
-  -e DATABASE_URL=postgresql://user:pass@host:5432/db \
+  -e APP_PORT=3000 \
+  -e DB_HOST=host.docker.internal \
+  -e DB_PORT=5432 \
+  -e DB_USER=nestuser \
+  -e DB_PASS=nestpassword \
+  -e DB_DATABASE=nestdb \
   nestjs-starter
 ```
 
 #### Using Environment File
 
-Create a `.env` file:
+Create a `.env` file (see [Configuration Guide](./configuration-guide.md) for the full list of supported variables):
 
 ```env
 NODE_ENV=production
-PORT=3000
-DATABASE_URL=postgresql://user:pass@host:5432/db
-LOG_LEVEL=info
+APP_PORT=3000
+DB_HOST=host.docker.internal
+DB_PORT=5432
+DB_USER=nestuser
+DB_PASS=nestpassword
+DB_DATABASE=nestdb
+LOGGING_LEVEL=info
 ```
 
 Run with environment file:
@@ -153,14 +177,14 @@ docker run -d -p 3000:3000 \
 
 For a complete list of supported environment variables and their descriptions, see the [Configuration Guide](./configuration-guide.md).
 
-The following are commonly used environment variables when running the application in Docker:
+The following are commonly used environment variables when running the application in Docker. The container's `EXPOSE 3000` only documents the intended port; the application itself listens on the port from `APP_PORT`, so set it explicitly to match your port mapping.
 
-| Variable        | Description                                | Default      | Example                               |
-| --------------- | ------------------------------------------ | ------------ | ------------------------------------- |
-| `NODE_ENV`      | Node.js environment                        | `production` | `production`, `development`           |
-| `APP_PORT`      | Application port (see Configuration Guide) | `3001`       | `3000`, `8080`                        |
-| `LOGGING_LEVEL` | Logging level (see Configuration Guide)    | `debug`      | `debug`, `info`, `warn`, `error`      |
-| `DATABASE_URL`  | Database connection string                 | -            | `postgresql://user:pass@host:5432/db` |
+| Variable        | Description                                | Default      | Example                          |
+| --------------- | ------------------------------------------ | ------------ | -------------------------------- |
+| `NODE_ENV`      | Node.js environment                        | `production` | `production`, `development`      |
+| `APP_PORT`      | Application port (see Configuration Guide) | `3001`       | `3000`, `8080`                   |
+| `LOGGING_LEVEL` | Logging level (see Configuration Guide)    | `log`        | `debug`, `info`, `warn`, `error` |
+| `DB_HOST`       | PostgreSQL database host                   | `localhost`  | `host.docker.internal`, `db`     |
 
 ## Container Management
 
@@ -273,42 +297,45 @@ docker rmi $(docker images nestjs-starter -q)
 
 ## Development Workflow
 
-### Development with Volume Mounting
+### Local Development vs. Docker
 
-For development, you might want to mount your source code:
+The runtime stage of the Dockerfile only contains the compiled `$WORKSPACE_DIR/dist` output and production dependencies — there is no NestJS CLI, TypeScript compiler, or watch process in the image, so mounting source files into a running container will not enable live-reload. For day-to-day development, run the application directly on your host instead:
 
 ```bash
-docker run -p 3000:3000 \
-  -v $(pwd)/src:/usr/src/app/src \
-  -e NODE_ENV=development \
-  nestjs-starter
+npm run start:dev -w packages/api
 ```
+
+Use the Docker image to validate production-like builds, or with [Docker Compose](./docker-compose-guide.md) to run the local PostgreSQL and pgAdmin services alongside it.
 
 ### Docker Compose for Development
 
-Create a `docker-compose.yml` file:
+The project's root `docker-compose.yml` runs PostgreSQL and pgAdmin only (see the [Docker Compose Guide](./docker-compose-guide.md)). The following illustrates adding the application itself to a compose file, passing the `WORKSPACE_DIR` build argument and the application's environment variables (see [Configuration Guide](./configuration-guide.md)):
 
 ```yaml
 version: '3.8'
 
 services:
   app:
-    build: .
+    build:
+      context: .
+      args:
+        WORKSPACE_DIR: packages/api
     ports:
       - '3000:3000'
     environment:
-      - NODE_ENV=development
-      - PORT=3000
-    volumes:
-      - ./src:/usr/src/app/src
+      - NODE_ENV=production
+      - APP_PORT=3000
+      - DB_HOST=db
+    depends_on:
+      - db
     restart: unless-stopped
 
   db:
-    image: postgres:15-alpine
+    image: postgres:17
     environment:
-      - POSTGRES_DB=nestjs_starter
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=nestdb
+      - POSTGRES_USER=nestuser
+      - POSTGRES_PASSWORD=nestpassword
     ports:
       - '5432:5432'
     volumes:
@@ -338,13 +365,13 @@ docker-compose down -v
 
 ```bash
 # Build and run in one command
-docker build -t nestjs-starter . && docker run -p 3000:3000 nestjs-starter
+docker build -t nestjs-starter . && docker run -p 3000:3000 -e APP_PORT=3000 nestjs-starter
 
 # Rebuild and restart
 docker stop nestjs-app || true
 docker rm nestjs-app || true
 docker build -t nestjs-starter .
-docker run -d -p 3000:3000 --name nestjs-app nestjs-starter
+docker run -d -p 3000:3000 -e APP_PORT=3000 --name nestjs-app nestjs-starter
 ```
 
 ## Troubleshooting
